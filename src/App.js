@@ -2,7 +2,7 @@ import React, { Suspense, useEffect } from "react";
 import "./App.css";
 import AppRouting from "./components/shared/AppRouting";
 import "react-toastify/dist/ReactToastify.css";
-import Spinner from "./components/layout/spinner";
+import Spinner from "./components/layout/spinner/spinner";
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "./components/Reducer/authSlice";
 import instance from "./components/apis/ApiConfig";
@@ -28,9 +28,6 @@ function App() {
       <Suspense fallback={<Spinner />}>
         <AppRouting />
       </Suspense>
-      {/* <Header />
-      <Sidebar />
-      <Main /> */}
     </>
   );
 }

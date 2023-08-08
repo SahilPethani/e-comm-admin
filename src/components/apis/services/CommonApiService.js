@@ -9,7 +9,7 @@ export const createRecord = async (data, url) => {
       data,
     });
     // return result;
-    return result.data;
+    return result?.data;
   } catch (error) {
     throw error;
   }
@@ -23,7 +23,7 @@ export const updateRecord = async (data, id, url) => {
       data,
     });
     // return result;
-    return result.data;
+    return result?.data;
   } catch (error) {
     throw error;
   }
@@ -36,7 +36,7 @@ export const deleteRecord = async (id, url) => {
       method: "DELETE",
     });
     // return result;
-    return result.data;
+    return result?.data;
   } catch (error) {
     throw error;
   }
@@ -49,7 +49,7 @@ export const getRecord = async (id, url) => {
       method: "GET",
     });
     // return result;
-    return result.data;
+    return result?.data;
   } catch (error) {
     throw error;
   }
@@ -62,7 +62,7 @@ export const fetchList = async (url) => {
       method: "GET",
     });
     // return result;
-    return result.data;
+    return result?.data;
   } catch (error) {
     throw error;
   }
