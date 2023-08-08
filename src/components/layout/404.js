@@ -1,5 +1,5 @@
 import React from 'react'
-import "./noteExist.css";
+import "./404page.css";
 import { useNavigate } from 'react-router-dom';
 
 function NoteExit404() {

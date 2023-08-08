@@ -23,20 +23,23 @@
 // export default MainLayout;
 
 import React from "react";
-import { Header } from "./Header";
 import Sidebar from "./Sidebar";
+import Header from "./Header";
+import { Navigate } from "react-router-dom";
 
 const MainLayout = ({ children }) => {
-  return (
-    <>
-      <div className="content-wrapper">
-        <Header />
-        <Sidebar />
-        <div className="main-content">
-          <main className="main-content-inner">{children}</main>
-        </div>
+  const user = window.localStorage.getItem("userDetails");
+
+  return user ? (
+    <div className="content-wrapper">
+      <Header />
+      <Sidebar />
+      <div className="main-content">
+        <main className="main-content-inner">{children}</main>
       </div>
-    </>
+    </div>
+  ) : (
+    <Navigate to="/login" />
   );
 };
 

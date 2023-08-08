@@ -6,10 +6,13 @@ import Storage from "../../utils/HandelLocalStorage";
 import { Routing } from "../../shared/constants/routing";
 import { useNavigate } from "react-router-dom";
 import { login } from "../../apis/services/AuthApiService";
+import { useDispatch } from "react-redux";
+import { loginSuccess } from "../../Reducer/authSlice";
 
 const Login = () => {
 
   let navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [userData, setUserData] = useState({
     email: "",
@@ -17,7 +20,7 @@ const Login = () => {
   })
 
   const handleUserdata = (e) => {
-    setUserData({...userData, [e.target.name]:e.target.value})
+    setUserData({ ...userData, [e.target.name]: e.target.value })
   }
 
   const handleSubmit = async () => {
@@ -29,9 +32,10 @@ const Login = () => {
     if (result?.status === 200) {
       Storage.storeItem("userDetails", JSON.stringify(result));
       if (result.user.role === "seller") {
+        dispatch(loginSuccess(result));
         navigate(Routing.Dashboard, { replace: true });
         toast.success(result.message);
-      } 
+      }
     } else {
       toast.error(result.message);
     }

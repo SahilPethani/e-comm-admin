@@ -11,6 +11,7 @@ import {
   Setting_icon,
 } from "../../assets/icon";
 import { Link, useNavigate } from "react-router-dom";
+import { connect } from "react-redux";
 
 const menus = [
   {
@@ -70,7 +71,10 @@ const menus = [
   },
 ];
 
-const Sidebar = () => {
+const Sidebar = (props) => {
+
+  const { authUserDetails } = props;
+
   const navigate = useNavigate();
 
   const changeRout = (menu) => {
@@ -92,7 +96,7 @@ const Sidebar = () => {
                       <span>{menu?.lable}</span>
                     </div>
                   </div>
-                  {menu?.item.map((subMenu, ind) => (
+                  {authUserDetails && menu?.item.map((subMenu, ind) => (
                     <>
                       <ul key={ind} className="item-group">
                         <li
@@ -132,4 +136,10 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+const mapStateToProps = (state) => {
+  return {
+    authUserDetails: state.auth.userInfo,
+  };
+};
+
+export default connect(mapStateToProps)(Sidebar);

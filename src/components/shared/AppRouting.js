@@ -9,6 +9,7 @@ import {
 } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import MainLayout from "../layout/MainLayout";
+import NoteExit404 from "../layout/404";
 const Login = lazy(() => import("../pages/login/Login"));
 const Dashboard = lazy(() => import("../pages/dashboard/Dashboard"));
 const Product = lazy(() => import("../pages/products/Products"));
@@ -74,6 +75,8 @@ const AppRouting = () => {
               />
             );
           })}
+        <Route path="*" element={<NoteExit404 />} />
+
       </Routes>
     </Router>
   );

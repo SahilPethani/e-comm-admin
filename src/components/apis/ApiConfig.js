@@ -9,23 +9,24 @@ const instance = axios.create({
   params: {},
 });
 
-// instance.defaults.headers.post['Content-Type'] = 'multipart/form-data';
-// instance.defaults.headers.post['Content-Type'] = 'application/json';
 let token = "";
-Storage.retrieveItem("userDetails").then((params) => {
+const params = window.localStorage.getItem("userDetails");
+// Storage.retrieveItem("userDetails").then((params) => {
   // console.log("Async User form axios", params);
   if (params === null || params === undefined || params === "") {
   } else {
     const userDetails = JSON.parse(params);
     token = userDetails?.Token;
   }
-});
+// });
 
 // // Add a request interceptor
 instance.interceptors.request.use(
   function (config) {
     if (token) {
       config.headers.Authorization = token;
+      // config.headers.Cookie = "token=" + token;
+
     }
     return config;
   },
@@ -43,15 +44,9 @@ instance.interceptors.response.use(
     return response;
   },
   function (error) {
-    // if (error.response.status === 400) {
-    //   // toast.error(error.response.data.message);
-    //   return error.response;
-    // } else {
-    //   toast.error(error.response.data.message);
-    // }
 
-    return error.response ;
-    // if (error) return error;
+    return error.response;
+
   }
 );
 

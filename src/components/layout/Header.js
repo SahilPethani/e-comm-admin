@@ -1,7 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import { Main_logo } from "../../assets/icon";
+import { connect, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { logOutSuccess } from "../Reducer/authSlice";
+import Storage from "../utils/HandelLocalStorage";
 
-export const Header = () => {
+const Header = (props) => {
+
+  let navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const { authUserDetails } = props;
+  const [show, setshow] = useState(false)
+
+  const logOut = () => {
+    dispatch(logOutSuccess(null))
+    Storage.clearItem("userDetails");
+    navigate("/login", { replace: true });
+  };
+
   return (
     <div className="header">
       <div className="logo">
@@ -37,12 +54,36 @@ export const Header = () => {
       <div className="admin-user flex flex-grow justify-end items-center">
         <div className="flex justify-items-start gap-1 justify-center">
           <div className="relative">
-            <a className="first-letter" href="/">
-              D
-            </a>
+            <button className="first-letter" onClick={() => setshow(!show)}>
+              {authUserDetails?.name.charAt(0).toUpperCase()}
+            </button>
+            {show === true && (
+              <div
+                className={`logout bg-background shadow p-2 ${show === true ? "block" : "hide"
+                  }`}
+              >
+                <div>
+                  <div>
+                    Hello <span className="text-primary">{authUserDetails?.name}</span>
+                  </div>
+                  <div className="mt-1" >
+                    <a className="text-critical cursor-pointer" onClick={logOut}>
+                      Logout
+                    </a>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
     </div>
   );
 };
+
+const mapStateToProps = (state) => {
+  return {
+    authUserDetails: state.auth.userInfo,
+  };
+};
+export default connect(mapStateToProps)(Header);

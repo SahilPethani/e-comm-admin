@@ -1,6 +1,49 @@
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import {
+  deleteRecord,
+  fetchList,
+  getRecord,
+} from "../../apis/services/CommonApiService";
+import { ApiEndPoints } from "../../apis/ApiEndPoints";
+import { toast } from "react-toastify";
+import { connect } from "react-redux";
 
-const Dashboard = () => {
+const Dashboard = (props) => {
+  const { authUserDetails } = props;
+
+  const [lifeTimeSale, setLifeTimeSale] = useState()
+  const [productState, setProductState] = useState([])
+  console.log("🚀 ~ file: Dashboard.js:16 ~ Dashboard ~ productState:", productState)
+
+  useEffect(() => {
+    getLifeTimeSale();
+  }, [authUserDetails?.userId]);
+
+  useEffect(() => {
+    getProductState();
+  }, [authUserDetails?.userId]);
+
+
+  const getLifeTimeSale = async () => {
+    const user_id = authUserDetails?.userId;
+    const result = await getRecord(user_id, ApiEndPoints.LIFE_TIME_SALE_SELLER);
+    if (result?.status === 200) {
+      setLifeTimeSale(result)
+    } else {
+      setLifeTimeSale({})
+    }
+  };
+
+  const getProductState = async () => {
+    const user_id = authUserDetails?.userId;
+    const result = await getRecord(user_id, ApiEndPoints.PRODUCT_STATE_SELLER);
+    if (result?.status === 200) {
+      setProductState(result.data)
+    } else {
+      setProductState([])
+    }
+  };
+
   return (
     <>
       <div className="page-heading flex justify-between items-center">
@@ -587,126 +630,34 @@ const Dashboard = () => {
               <div className="card-session-content pt-lg">
                 <table className="listing bestsellers">
                   <tbody>
-                    <tr>
-                      <td>
-                        <div
-                          className="grid-thumbnail text-border border border-divider p-075 rounded flex justify-center"
-                          style={{ width: "6rem", height: "6rem" }}
-                        >
-                          <img
-                            className="self-center"
-                            src="/admin/assets//catalog/1083/2531/plv1405-White.png"
-                            alt=""
-                          />
-                        </div>
-                      </td>
-                      <td>
-                        <a
-                          href="/admin/products/edit/39c877ab-a50b-40a6-a14b-283284205eae"
-                          className="font-semibold hover:underline"
-                        >
-                          Nmd_r1 shoes
-                        </a>
-                      </td>
-                      <td>$537.00</td>
-                      <td>144531 solded</td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <div
-                          className="grid-thumbnail text-border border border-divider p-075 rounded flex justify-center"
-                          style={{ width: "6rem", height: "6rem" }}
-                        >
-                          <img
-                            className="self-center"
-                            src="/admin/assets//catalog/8970/2142/plv2353-White.png"
-                            alt=""
-                          />
-                        </div>
-                      </td>
-                      <td>
-                        <a
-                          href="/admin/products/edit/38cb4c02-4ab2-4209-825a-6f764db51f38"
-                          className="font-semibold hover:underline"
-                        >
-                          Alphaedge 4d reflective shoes R
-                        </a>
-                      </td>
-                      <td>$133.00</td>
-                      <td>2449 solded</td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <div
-                          className="grid-thumbnail text-border border border-divider p-075 rounded flex justify-center"
-                          style={{ width: "6rem", height: "6rem" }}
-                        >
-                          <img
-                            className="self-center"
-                            src="/admin/assets//catalog/1347/5456/plv1726-Black.png"
-                            alt=""
-                          />
-                        </div>
-                      </td>
-                      <td>
-                        <a
-                          href="/admin/products/edit/d4bfaf7d-e78f-47ff-b2e5-629507466951"
-                          className="font-semibold hover:underline"
-                        >
-                          Alphaedge 4d reflective shoes R
-                        </a>
-                      </td>
-                      <td>$133.00</td>
-                      <td>1767 solded</td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <div
-                          className="grid-thumbnail text-border border border-divider p-075 rounded flex justify-center"
-                          style={{ width: "6rem", height: "6rem" }}
-                        >
-                          <img
-                            className="self-center"
-                            src="/admin/assets//catalog/4027/1795/plv1726-Black.png"
-                            alt=""
-                          />
-                        </div>
-                      </td>
-                      <td>
-                        <a
-                          href="/admin/products/edit/7680bb93-220b-4d9c-aad6-638abd143b7f"
-                          className="font-semibold hover:underline"
-                        >
-                          Alphaedge 4d reflective shoes R
-                        </a>
-                      </td>
-                      <td>$133.00</td>
-                      <td>1609 solded</td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <div
-                          className="grid-thumbnail text-border border border-divider p-075 rounded flex justify-center"
-                          style={{ width: "6rem", height: "6rem" }}
-                        >
-                          <img
-                            className="self-center"
-                            src="/admin/assets//catalog/2344/7439/plv2353-White.png"
-                            alt=""
-                          />
-                        </div>
-                      </td>
-                      <td>
-                        <a
-                          href="/admin/products/edit/a88dd42d-6c92-4b71-aa2f-e18cafabe7f8"
-                          className="font-semibold hover:underline"
-                        >
-                          Alphaedge 4d reflective shoes R
-                        </a>
-                      </td>
-                      <td>$133.00</td>
-                      <td>1579 solded</td>
-                    </tr>
+                    {
+                      productState?.map((item, index) => (
+                        <tr>
+                          <td>
+                            <div
+                              className="grid-thumbnail text-border border border-divider p-075 rounded flex justify-center"
+                              style={{ width: "6rem", height: "6rem" }}
+                            >
+                              <img
+                                className="self-center"
+                                src={item?.product?.images[0]?.url}
+                                alt=""
+                              />
+                            </div>
+                          </td>
+                          <td>
+                            <a
+                              href="/admin/products/edit/39c877ab-a50b-40a6-a14b-283284205eae"
+                              className="font-semibold hover:underline"
+                            >
+                              {item?.product?.name}
+                            </a>
+                          </td>
+                          <td>${item?.totalPrice.toFixed(2)}</td>
+                          <td>{item?.totalQuantity} solded</td>
+                        </tr>
+                      ))
+                    }
                   </tbody>
                 </table>
               </div>
@@ -726,7 +677,7 @@ const Dashboard = () => {
                       className="info dot"
                       style={{ width: "1rem", height: "1rem" }}
                     />
-                    <div className="self-center">2487 orders</div>
+                    <div className="self-center">{lifeTimeSale?.totalOrders} orders</div>
                   </div>
                   <div className="flex space-x-1 items-center">
                     <span
@@ -734,7 +685,7 @@ const Dashboard = () => {
                       style={{ width: "1rem", height: "1rem" }}
                     />
                     <div className="self-center">
-                      $98,955,642.62 lifetime sale
+                      ${lifeTimeSale?.lifetimeSales} lifetime sale
                     </div>
                   </div>
                   <div className="flex space-x-1 items-center">
@@ -742,14 +693,14 @@ const Dashboard = () => {
                       className="success dot"
                       style={{ width: "1rem", height: "1rem" }}
                     />
-                    <div className="self-center">0% of orders completed</div>
+                    <div className="self-center">{lifeTimeSale?.completedPercentage}% of orders completed</div>
                   </div>
                   <div className="flex space-x-1 items-center">
                     <span
                       className="critical dot"
                       style={{ width: "1rem", height: "1rem" }}
                     />
-                    <div className="self-center">0% of orders cancelled</div>
+                    <div className="self-center">{lifeTimeSale?.cancelledPercentage}% of orders cancelled</div>
                   </div>
                 </div>
               </div>
@@ -886,4 +837,9 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+const mapStateToProps = (state) => {
+  return {
+    authUserDetails: state.auth.userInfo,
+  };
+};
+export default connect(mapStateToProps)(Dashboard);
