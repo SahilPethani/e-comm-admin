@@ -10,10 +10,13 @@ import {
 import { ToastContainer } from "react-toastify";
 import MainLayout from "../layout/MainLayout";
 import NoteExit404 from "../layout/404";
+
 const Login = lazy(() => import("../pages/login/Login"));
 const Dashboard = lazy(() => import("../pages/dashboard/Dashboard"));
 const Product = lazy(() => import("../pages/products/Products"));
 const Coupon = lazy(() => import("../pages/Coupon/Coupon"));
+const Store_setting = lazy(() => import("../pages/setting/tabs/Store"));
+const Setting_Payments = lazy(() => import("../pages/setting/tabs/Payments"));
 
 const routes = [
   {
@@ -39,6 +42,16 @@ const routes = [
   {
     path: Routing.Coupon,
     component: Coupon,
+    isPrivateRoute: true,
+  },
+  {
+    path: Routing.setting_store,
+    component: Store_setting,
+    isPrivateRoute: true,
+  },
+  {
+    path: Routing.setting_Payments,
+    component: Setting_Payments,
     isPrivateRoute: true,
   },
 ];
@@ -76,7 +89,6 @@ const AppRouting = () => {
             );
           })}
         <Route path="*" element={<NoteExit404 />} />
-
       </Routes>
     </Router>
   );

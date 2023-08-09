@@ -17,7 +17,10 @@ const Area = (props) => {
 
   const getLifeTimeSale = async () => {
     const user_id = authUserDetails?.userId;
-    const result = await getRecord(user_id, ApiEndPoints.SALES_MONTHLY + `${chartDate}`);
+    const result = await getRecord(
+      user_id,
+      ApiEndPoints.SALES_MONTHLY + `${chartDate}`
+    );
     if (result?.status === 200) {
       setXaxis(result?.labels);
       setPrice(result?.data);
@@ -27,22 +30,29 @@ const Area = (props) => {
     }
   };
 
-
   const options = {
     chart: {
       id: "apexchart-example",
       zoom: {
-        enabled: false
-      }
+        enabled: false,
+      },
     },
     xaxis: {
       categories: xaxis,
     },
-    colors: ['rgb(130, 202, 157)'],
+    colors: ["rgb(130, 202, 157)"],
     dataLabels: {
-      enabled: false
+      enabled: false,
     },
-
+    tooltip: {
+      enabled: true,
+      // enabledOnSeries: undefined,
+      shared: true,
+      followCursor: true,
+      onDatasetHover: {
+        highlightDataSeries: true,
+      },
+    },
   };
   const series = [
     {

@@ -621,9 +621,7 @@ input[type=checkbox]:checked+.checkbox-checked svg {
   position: fixed;
   bottom: 0px;
   left: 0px;
-  width: 200px;
-  background-color: rgba(246, 246, 247, 0.9882352941);
-  padding-bottom: 2rem
+width: 200px;
 }
 
 .flatpickr-calendar {
@@ -3227,7 +3225,8 @@ video {
   top: 5.6rem;
   padding-right: 4px;
   padding-bottom: 15rem;
-  overflow-y: scroll
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 .admin-navigation .top-bar {

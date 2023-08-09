@@ -1,4 +1,5 @@
 import React from "react";
+
 // import { BrowserRouter, Routes, Route } from "react-router-dom";
 import {
   Attributes_icon,
@@ -72,7 +73,6 @@ const menus = [
 ];
 
 const Sidebar = (props) => {
-
   const { authUserDetails } = props;
 
   const navigate = useNavigate();
@@ -96,25 +96,26 @@ const Sidebar = (props) => {
                       <span>{menu?.lable}</span>
                     </div>
                   </div>
-                  {authUserDetails && menu?.item.map((subMenu, ind) => (
-                    <>
-                      <ul key={ind} className="item-group">
-                        <li
-                          className={`${
-                            curentPage === subMenu?.value && "active "
-                          } nav-item`}
-                        >
-                          <Link
-                            to={`/${subMenu?.value}`}
-                            className="flex justify-left"
+                  {authUserDetails &&
+                    menu?.item.map((subMenu, ind) => (
+                      <>
+                        <ul key={ind} className="item-group">
+                          <li
+                            className={`${
+                              curentPage === subMenu?.value && "active "
+                            } nav-item`}
                           >
-                            <i className="menu-icon">{subMenu?.image}</i>
-                            {subMenu?.lable}
-                          </Link>
-                        </li>
-                      </ul>
-                    </>
-                  ))}
+                            <Link
+                              to={`/${subMenu?.value}`}
+                              className="flex justify-left"
+                            >
+                              <i className="menu-icon">{subMenu?.image}</i>
+                              {subMenu?.lable}
+                            </Link>
+                          </li>
+                        </ul>
+                      </>
+                    ))}
                 </li>
               </>
             ))}
@@ -124,7 +125,7 @@ const Sidebar = (props) => {
                   <span>
                     <Setting_icon />
                   </span>
-                  <a href="/admin/setting/store">Setting</a>
+                  <Link to={"/setting/store"}>Setting</Link>
                 </div>
               </div>
               <ul className="item-group"></ul>
