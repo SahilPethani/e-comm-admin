@@ -3,5 +3,5 @@ export const ApiEndPoints = {
   PRODUCTS: "product",
   LIFE_TIME_SALE_SELLER: "seller/lifetimesale",
   PRODUCT_STATE_SELLER: "seller/stats",
-  SALES_MONTHLY: "seller/sales/monthly",
+  SALES_MONTHLY: "seller/sales/",
 };

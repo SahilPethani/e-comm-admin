@@ -6,43 +6,47 @@ import { ApiEndPoints } from "../../../apis/ApiEndPoints";
 
 const Area = (props) => {
   const { authUserDetails } = props;
+  const { chartDate } = props;
 
-  const [month, setMonth] = useState([]);
+  const [xaxis, setXaxis] = useState([]);
   const [price, setPrice] = useState([]);
 
   useEffect(() => {
     getLifeTimeSale();
-  }, [authUserDetails?.userId]);
+  }, [authUserDetails?.userId, chartDate]);
 
   const getLifeTimeSale = async () => {
     const user_id = authUserDetails?.userId;
-    const result = await getRecord(user_id, ApiEndPoints.SALES_MONTHLY);
+    const result = await getRecord(user_id, ApiEndPoints.SALES_MONTHLY + `${chartDate}`);
     if (result?.status === 200) {
-      setMonth(result?.labels);
+      setXaxis(result?.labels);
       setPrice(result?.data);
-      //   setLifeTimeSale(result);
     } else {
-      //   setLifeTimeSale({});
+      setXaxis([]);
+      setPrice([]);
     }
   };
 
-  //   const series = [
-  //     {
-  //       name: "STOCK ABC",
-  //       data: month,
-  //     },
-  //   ];
+
   const options = {
     chart: {
       id: "apexchart-example",
+      zoom: {
+        enabled: false
+      }
     },
     xaxis: {
-      categories: month,
+      categories: xaxis,
     },
+    colors: ['rgb(130, 202, 157)'],
+    dataLabels: {
+      enabled: false
+    },
+
   };
   const series = [
     {
-      name: "series-1",
+      name: "Sale",
       data: price,
     },
   ];

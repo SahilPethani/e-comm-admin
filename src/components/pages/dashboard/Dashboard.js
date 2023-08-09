@@ -14,6 +14,7 @@ const Dashboard = (props) => {
 
   const [lifeTimeSale, setLifeTimeSale] = useState();
   const [productState, setProductState] = useState([]);
+  const [chartDate, setChartDate] = useState("monthly");
 
   useEffect(() => {
     getLifeTimeSale();
@@ -43,6 +44,10 @@ const Dashboard = (props) => {
     }
   };
 
+  const handleChartdate = (e) => {
+    setChartDate(e.target.text)
+  }
+
   return (
     <>
       <div className="page-heading flex justify-between items-center">
@@ -60,24 +65,24 @@ const Dashboard = (props) => {
               <h2 className="card-title">Sale Statistic</h2>
               <div className="flex space-x-075">
                 <div className="card-action">
-                  <a href="/" className="text-interactive">
+                  <a onClick={handleChartdate} className="text-interactive cursor-pointer">
                     Daily
                   </a>
                 </div>
                 <div className="card-action">
-                  <a href="/" className="text-interactive">
+                  <a onClick={handleChartdate} className="text-interactive cursor-pointer">
                     Weekly
                   </a>
                 </div>
                 <div className="card-action">
-                  <a href="/" className="text-interactive">
+                  <a onClick={handleChartdate} className="text-interactive cursor-pointer">
                     Monthly
                   </a>
                 </div>
               </div>
             </div>
             <div className="card-section border-b box-border">
-              <Area />
+              <Area chartDate={chartDate}/>
             </div>
           </div>
           <div className="card shadow">
