@@ -4,4 +4,6 @@ export const ApiEndPoints = {
   LIFE_TIME_SALE_SELLER: "seller/lifetimesale",
   PRODUCT_STATE_SELLER: "seller/stats",
   SALES_MONTHLY: "seller/sales/",
+
+  STORE_DETAIL:"/seller/storeInfo"
 };

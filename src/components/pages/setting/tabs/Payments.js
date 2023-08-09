@@ -1,7 +1,8 @@
 import React from "react";
 import SettingTab from "../SettingTab";
 
-const Store_setting = () => {
+const Payments_setting = () => {
+
   return (
     <>
       <div className="grid grid-cols-6 gap-x-2 grid-flow-row ">
@@ -1367,4 +1368,4 @@ const Store_setting = () => {
   );
 };
 
-export default Store_setting;
+export default Payments_setting;
