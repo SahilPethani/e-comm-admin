@@ -1,13 +1,76 @@
 import React, { useEffect, useState } from "react";
 import Editor from "../../common/Editor";
+import { connect } from "react-redux";
 
-const AddCategories = () => {
+const AddCategories = (props) => {
+  const { authUserDetails } = props;
+
   const [editorLoaded, setEditorLoaded] = useState(false);
-  const [data, setData] = useState("");
 
   useEffect(() => {
     setEditorLoaded(true);
   }, []);
+
+  const [categoriDetail, setCategoriDetail] = useState({
+    name: "",
+    Description: "",
+    image: "",
+    image_url: null,
+    status: 0,
+    include_in_store_menu: 1,
+    parent_category: "",
+    url_key: "",
+    meta_title: "",
+    meta_keywords: "",
+    meta_description: ""
+  })
+
+  const handleCategoryDetail = (e) => {
+    const { name } = e.target
+    const { value } = e.target
+    setCategoriDetail({ ...categoriDetail, [name]: value });
+  }
+
+  const handleCategoryStatus = (e) => {
+    if (e.target.id === "status0") {
+      setCategoriDetail((option) => ({
+        ...option,
+        status: 0
+      }))
+    } else {
+      setCategoriDetail((option) => ({
+        ...option,
+        status: 1
+      }))
+    }
+  }
+
+  const handleCategoryStor_menu = (e) => {
+    if (e.target.id === "include_in_nav0") {
+      setCategoriDetail((option) => ({
+        ...option,
+        include_in_store_menu: 0
+      }))
+    } else {
+      setCategoriDetail((option) => ({
+        ...option,
+        include_in_store_menu: 1
+      }))
+    }
+  }
+
+  const handleImg = (e) => {
+    const reader = new FileReader()
+    reader.onload = () => {
+      if (reader.readyState === 2) {
+        setCategoriDetail((option) => ({
+          ...option,
+          image_url: reader.result
+        }))
+      }
+    };
+    reader.readAsDataURL(e.target.files[0])
+  }
 
   return (
     <>
@@ -48,7 +111,7 @@ const AddCategories = () => {
                       <div className="form-field-container null">
                         <label htmlFor="name">Name</label>
                         <div className="field-wrapper flex flex-grow">
-                          <input type="text" name="name" defaultValue="" />
+                          <input type="text" name="name" onChange={handleCategoryDetail} value={categoriDetail.name} defaultValue="" />
                           <div className="field-border" />
                         </div>
                       </div>
@@ -96,9 +159,12 @@ const AddCategories = () => {
                         </div>
 
                         <Editor
-                          name="description"
+                          name="Description"
                           onChange={(data) => {
-                            setData(data);
+                            setCategoriDetail((option) => ({
+                              ...option,
+                              Description: data
+                            }))
                           }}
                           editorLoaded={editorLoaded}
                         />
@@ -117,7 +183,7 @@ const AddCategories = () => {
                       <div className="form-field-container null">
                         <label htmlFor="url_key">Url key</label>
                         <div className="field-wrapper flex flex-grow">
-                          <input type="text" name="url_key" defaultValue="" />
+                          <input type="text" name="url_key" onChange={handleCategoryDetail} value={categoriDetail.url_key} defaultValue="" />
                           <div className="field-border" />
                         </div>
                       </div>
@@ -127,6 +193,8 @@ const AddCategories = () => {
                           <input
                             type="text"
                             name="meta_title"
+                            onChange={handleCategoryDetail}
+                            value={categoriDetail.meta_title}
                             defaultValue=""
                           />
                           <div className="field-border" />
@@ -136,7 +204,9 @@ const AddCategories = () => {
                         <label htmlFor="meta_keywords">Meta keywords</label>
                         <div className="field-wrapper flex flex-grow">
                           <input
+                            value={categoriDetail.meta_keywords}
                             type="text"
+                            onChange={handleCategoryDetail}
                             name="meta_keywords"
                             defaultValue=""
                           />
@@ -150,7 +220,9 @@ const AddCategories = () => {
                         <div className="field-wrapper flex flex-grow">
                           <textarea
                             type="text"
+                            value={categoriDetail.meta_description}
                             className="form-field"
+                            onChange={handleCategoryDetail}
                             id="meta_description"
                             name="meta_description"
                             defaultValue={""}
@@ -170,40 +242,61 @@ const AddCategories = () => {
                 </div>
                 <div className="card-section border-b box-border">
                   <div className="card-session-content pt-lg">
-                    <label
-                      htmlFor="categoryImageUpload"
-                      className="flex flex-col justify-center image-uploader"
-                    >
-                      <div className="uploader-icon flex justify-center">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-5 w-5"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      </div>
-                      <div className="flex justify-center">
-                        <button type="button" className="button default">
-                          <span>Add image</span>
-                        </button>
-                      </div>
-                      <div className="flex justify-center mt-1">
-                        <span style={{ color: "#6d7175", fontSize: "1.2rem" }}>
-                          click to upload an image
-                        </span>
-                      </div>
-                    </label>
+                    {categoriDetail.image_url === null &&
+                      <label
+                        htmlFor="categoryImageUpload"
+                        className="flex flex-col justify-center image-uploader"
+                      >
+                        <div className="uploader-icon flex justify-center">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-5 w-5"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                        </div>
+                        <div className="flex justify-center">
+                          <div type="button" className="button default">
+                            <span>Add image</span>
+                          </div>
+                        </div>
+                        <div className="flex justify-center mt-1">
+                          <span style={{ color: "#6d7175", fontSize: "1.2rem" }}>
+                            click to upload an image
+                          </span>
+                        </div>
+                      </label>}
                     <input type="hidden" defaultValue="" name="image" />
                     <div className="invisible" style={{ width: 1, height: 1 }}>
-                      <input type="file" id="categoryImageUpload" />
+                      <input type="file" onChange={handleImg} id="categoryImageUpload" />
                     </div>
+                    {
+                      categoriDetail.image_url !== null &&
+                      <img
+                        className="image-uploader-border"
+                        src={categoriDetail.image_url}
+                        alt="img"
+                      />
+                    }
                   </div>
+                  {
+                    categoriDetail.image_url !== null &&
+                    <button
+                      onClick={() =>
+                        setCategoriDetail((option) => ({
+                          ...option,
+                          image_url: null
+                        }))}
+                      className="button critical outline w-100 mt-1">
+                      <span>Remove</span>
+                    </button>
+                  }
                 </div>
               </div>
               <div className="card shadow">
@@ -220,8 +313,8 @@ const AddCategories = () => {
                               type="radio"
                               name="status"
                               id="status0"
-                              defaultValue={0}
-                              defaultChecked=""
+                              onChange={handleCategoryStatus}
+                              checked
                             />
                             <span className="radio-checked">
                               <span />
@@ -235,9 +328,11 @@ const AddCategories = () => {
                               type="radio"
                               name="status"
                               id="status1"
-                              defaultValue={1}
+                              onChange={handleCategoryStatus}
                             />
-                            <span className="radio-unchecked" />
+                            <span className="radio-checked" >
+                              <span />
+                            </span>
                             <span className="pl-1">Enabled</span>
                           </label>
                         </div>
@@ -260,8 +355,7 @@ const AddCategories = () => {
                               type="radio"
                               name="include_in_nav"
                               id="include_in_nav0"
-                              defaultValue={0}
-                              defaultChecked=""
+                              onChange={handleCategoryStor_menu}
                             />
                             <span className="radio-checked">
                               <span />
@@ -275,9 +369,12 @@ const AddCategories = () => {
                               type="radio"
                               name="include_in_nav"
                               id="include_in_nav1"
-                              defaultValue={1}
+                              onChange={handleCategoryStor_menu}
+                              checked
                             />
-                            <span className="radio-unchecked" />
+                            <span className="radio-checked">
+                              <span />
+                            </span>
                             <span className="pl-1">Yes</span>
                           </label>
                         </div>
@@ -302,4 +399,9 @@ const AddCategories = () => {
   );
 };
 
-export default AddCategories;
+const mapStateToProps = (state) => {
+  return {
+    authUserDetails: state.auth.userInfo,
+  };
+};
+export default connect(mapStateToProps)(AddCategories);
