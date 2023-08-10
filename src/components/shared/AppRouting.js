@@ -21,8 +21,8 @@ const Setting_Payments = lazy(() => import("../pages/setting/tabs/Payments"));
 
 const Setting_Shipping = lazy(() => import("../pages/setting/tabs/Shipping"));
 const Setting_Tax = lazy(() => import("../pages/setting/tabs/Tax"));
-
 const Categories = lazy(() => import("../pages/categories/Categories"));
+const AddCategories = lazy(() => import("../pages/categories/AddCategories"));
 
 const routes = [
   {
@@ -73,6 +73,11 @@ const routes = [
   {
     path: Routing.Categories,
     component: Categories,
+    isPrivateRoute: true,
+  },
+  {
+    path: Routing.AddCategories,
+    component: AddCategories,
     isPrivateRoute: true,
   },
 ];

@@ -1,9 +1,7 @@
 import React, { useState } from "react";
-import "./Setting.css";
 import { Link } from "react-router-dom";
 
 const SettingTab = () => {
-
   return (
     <>
       <div className="col-span-2">

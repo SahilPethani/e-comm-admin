@@ -10,5 +10,6 @@ export const Routing = {
   Setting_Shipping: "/setting/shipping",
   Setting_Tax: "/setting/tax",
 
-  Categories:"/categories"
+  Categories: "/categories",
+  AddCategories: "/categories/new",
 };

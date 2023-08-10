@@ -26,18 +26,22 @@ import React from "react";
 import Sidebar from "./Sidebar";
 import Header from "./Header";
 import { Navigate } from "react-router-dom";
+import Footer from "./MainFooter.js";
 
 const MainLayout = ({ children }) => {
   const user = window.localStorage.getItem("userDetails");
 
   return user ? (
-    <div className="content-wrapper">
-      <Header />
-      <Sidebar />
-      <div className="main-content">
-        <main className="main-content-inner">{children}</main>
+    <>
+      <div className="content-wrapper">
+        <Header />
+        <Sidebar />
+        <div className="main-content">
+          <main className="main-content-inner">{children}</main>
+          <Footer />
+        </div>
       </div>
-    </div>
+    </>
   ) : (
     <Navigate to="/login" />
   );
