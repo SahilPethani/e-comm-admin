@@ -4,6 +4,11 @@ export const Routing = {
   Dashboard: "/dashboard",
   Product: "/products",
   Coupon: "/coupon/new",
-  setting_store: "/setting/store",
-  setting_Payments: "/setting/payments",
+
+  Setting_store: "/setting/store",
+  Setting_Payments: "/setting/payments",
+  Setting_Shipping: "/setting/shipping",
+  Setting_Tax: "/setting/tax",
+
+  Categories:"/categories"
 };

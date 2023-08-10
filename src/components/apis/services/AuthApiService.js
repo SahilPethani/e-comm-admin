@@ -8,7 +8,7 @@ export const login = async (data) => {
       method: "POST",
       data,
     });
-    return result.data;
+    return result?.data;
   } catch (error) {
     throw error;
   }

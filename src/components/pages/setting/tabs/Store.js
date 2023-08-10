@@ -113,7 +113,7 @@ const Store_setting = (props) => {
                   <div className="form-field-container dropdown null">
                     <label htmlFor="storeTimeZone">TimeZone</label>
                     <div className="field-wrapper flex flex-grow items-baseline">
-                      <StoreTimeZone time_zone={storDetail.time_zone} handleStoreInfo={handleStoreInfo}/>
+                      <StoreTimeZone time_zone={storDetail.time_zone} handleStoreInfo={handleStoreInfo} />
                       <div className="field-border" />
                       <div className="field-suffix">
                         <svg
@@ -180,7 +180,7 @@ const Store_setting = (props) => {
                     <div className="form-field-container dropdown null">
                       <label htmlFor="storeCountry">Country</label>
                       <div className="field-wrapper flex flex-grow items-baseline">
-                        <StoreCountry country={storDetail.country} handleStoreInfo={handleStoreInfo}/>
+                        <StoreCountry country={storDetail.country} handleStoreInfo={handleStoreInfo} />
                         <div className="field-border" />
                         <div className="field-suffix">
                           <svg
@@ -229,7 +229,7 @@ const Store_setting = (props) => {
                       <div className="form-field-container dropdown null">
                         <label htmlFor="storeProvince">Province</label>
                         <div className="field-wrapper flex flex-grow items-baseline">
-                          <StoreProvince province={storDetail.province} handleStoreInfo={handleStoreInfo}/>
+                          <StoreProvince province={storDetail.province} handleStoreInfo={handleStoreInfo} />
                           <div className="field-border" />
                           <div className="field-suffix">
                             <svg
@@ -270,6 +270,14 @@ const Store_setting = (props) => {
               </button>
             </div>
           </div>
+        </div>
+      </div>
+      <div className="footer">
+        <div className="copyright">
+          <span>Copyright © 2021 WolfShop</span>
+        </div>
+        <div className="version">
+          <span>Version 1.0 dev</span>
         </div>
       </div>
     </>

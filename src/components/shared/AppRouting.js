@@ -14,9 +14,15 @@ import NoteExit404 from "../layout/404";
 const Login = lazy(() => import("../pages/login/Login"));
 const Dashboard = lazy(() => import("../pages/dashboard/Dashboard"));
 const Product = lazy(() => import("../pages/products/Products"));
-const Coupon = lazy(() => import("../pages/Coupon/Coupon"));
+const Coupon = lazy(() => import("../pages/coupon/Coupon"));
+
 const Store_setting = lazy(() => import("../pages/setting/tabs/Store"));
 const Setting_Payments = lazy(() => import("../pages/setting/tabs/Payments"));
+
+const Setting_Shipping = lazy(() => import("../pages/setting/tabs/Shipping"));
+const Setting_Tax = lazy(() => import("../pages/setting/tabs/Tax"));
+
+const Categories = lazy(() => import("../pages/categories/Categories"));
 
 const routes = [
   {
@@ -45,13 +51,28 @@ const routes = [
     isPrivateRoute: true,
   },
   {
-    path: Routing.setting_store,
+    path: Routing.Setting_store,
     component: Store_setting,
     isPrivateRoute: true,
   },
   {
-    path: Routing.setting_Payments,
+    path: Routing.Setting_Payments,
     component: Setting_Payments,
+    isPrivateRoute: true,
+  },
+  {
+    path: Routing.Setting_Shipping,
+    component: Setting_Shipping,
+    isPrivateRoute: true,
+  },
+  {
+    path: Routing.Setting_Tax,
+    component: Setting_Tax,
+    isPrivateRoute: true,
+  },
+  {
+    path: Routing.Categories,
+    component: Categories,
     isPrivateRoute: true,
   },
 ];

@@ -81,7 +81,7 @@ const Sidebar = (props) => {
     navigate(`/${menu.value}`);
   };
 
-  const curentPage = window.location.pathname.split("/")[1];
+  const curentPage = window.location.pathname.split()[0];
 
   return (
     <div className="admin-navigation">
@@ -101,9 +101,8 @@ const Sidebar = (props) => {
                       <>
                         <ul key={ind} className="item-group">
                           <li
-                            className={`${
-                              curentPage === subMenu?.value && "active "
-                            } nav-item`}
+                            className={`${curentPage === "/" + subMenu?.value && "active "
+                              } nav-item`}
                           >
                             <Link
                               to={`/${subMenu?.value}`}
@@ -119,8 +118,9 @@ const Sidebar = (props) => {
                 </li>
               </>
             ))}
-            <li className="root-nav-item nav-item">
-              <div className="flex justify-between items-center">
+            <li className={`root-nav-item nav-item `}>
+              <div className={`flex justify-between items-center ${curentPage === "/setting/store" ? "active " : ""
+              } nav-item`}>
                 <div className="root-label flex justify-between items-center">
                   <span>
                     <Setting_icon />

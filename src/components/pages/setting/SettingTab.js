@@ -32,7 +32,7 @@ const SettingTab = () => {
             <div className="card-section border-b box-border">
               <div className="flex justify-between card-section-header mb-1">
                 <h3 className="card-session-title">
-                  <a href="/admin/setting/shipping">Shipping Setting</a>
+                  <Link to={"/setting/shipping"}>Shipping Setting</Link>
                 </h3>
               </div>
               <div className="card-session-content pt-lg">
@@ -42,7 +42,7 @@ const SettingTab = () => {
             <div className="card-section border-b box-border">
               <div className="flex justify-between card-section-header mb-1">
                 <h3 className="card-session-title">
-                  <a href="/admin/setting/tax">Tax Setting</a>
+                  <Link to={"/setting/tax"}>Tax Setting</Link>
                 </h3>
               </div>
               <div className="card-session-content pt-lg">
