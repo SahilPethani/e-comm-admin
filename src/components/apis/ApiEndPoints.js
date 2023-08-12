@@ -5,5 +5,8 @@ export const ApiEndPoints = {
   PRODUCT_STATE_SELLER: "seller/stats",
   SALES_MONTHLY: "seller/sales/",
 
-  STORE_DETAIL:"/seller/storeInfo"
+  STORE_DETAIL:"seller/storeInfo",
+
+  ADD_CATEGORIS:"seller/category/new",
+  GET_CATEGORIS:"category"
 };

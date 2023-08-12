@@ -1,11 +1,18 @@
 import React, { useEffect, useState } from "react";
 import Editor from "../../common/Editor";
+import { toast } from "react-toastify";
 import { connect } from "react-redux";
+import { createRecord } from "../../apis/services/CommonApiService";
+import { ApiEndPoints } from "../../apis/ApiEndPoints";
+import { useNavigate } from "react-router-dom";
+import { Routing } from "../../shared/constants/routing";
 
 const AddCategories = (props) => {
   const { authUserDetails } = props;
+  const navigate = useNavigate();
 
   const [editorLoaded, setEditorLoaded] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setEditorLoaded(true);
@@ -14,7 +21,7 @@ const AddCategories = (props) => {
   const [categoriDetail, setCategoriDetail] = useState({
     name: "",
     Description: "",
-    image: "",
+    image: null,
     image_url: null,
     status: 0,
     include_in_store_menu: 1,
@@ -31,45 +38,43 @@ const AddCategories = (props) => {
     setCategoriDetail({ ...categoriDetail, [name]: value });
   }
 
-  const handleCategoryStatus = (e) => {
-    if (e.target.id === "status0") {
-      setCategoriDetail((option) => ({
-        ...option,
-        status: 0
-      }))
-    } else {
-      setCategoriDetail((option) => ({
-        ...option,
-        status: 1
-      }))
-    }
-  }
+  const handleSubmit = async () => {
+    setLoading(true);
+    const user_id = authUserDetails?.userId;
+    // var bodyFormData = new FormData();
+    // bodyFormData.append("name", categoriDetail.name);
+    // bodyFormData.append("description", categoriDetail.Description);
+    // bodyFormData.append("category_banner", categoriDetail?.image);
+    // bodyFormData.append("user", user_id);
+    // bodyFormData.append("status", categoriDetail.status);
+    // bodyFormData.append("include_in_store_menu", categoriDetail.include_in_store_menu);
+    // bodyFormData.append("url_key", categoriDetail.url_key);
+    // bodyFormData.append("meta_title", categoriDetail.meta_title);
+    // bodyFormData.append("meta_keywords", categoriDetail.meta_keywords);
+    // bodyFormData.append("meta_description", categoriDetail.meta_description);
 
-  const handleCategoryStor_menu = (e) => {
-    if (e.target.id === "include_in_nav0") {
-      setCategoriDetail((option) => ({
-        ...option,
-        include_in_store_menu: 0
-      }))
-    } else {
-      setCategoriDetail((option) => ({
-        ...option,
-        include_in_store_menu: 1
-      }))
-    }
-  }
-
-  const handleImg = (e) => {
-    const reader = new FileReader()
-    reader.onload = () => {
-      if (reader.readyState === 2) {
-        setCategoriDetail((option) => ({
-          ...option,
-          image_url: reader.result
-        }))
-      }
+    let data = {
+      name: categoriDetail.name,
+      description: categoriDetail.Description,
+      user: user_id,
+      // category_banner: categoriDetail?.image,
+      status: categoriDetail.status,
+      include_in_store_menu: categoriDetail.include_in_store_menu,
+      // parent_category: categoriDetail.parent_category,
+      url_key: categoriDetail.url_key,
+      meta_title: categoriDetail.meta_title,
+      meta_keywords: categoriDetail.meta_keywords,
+      meta_description: categoriDetail.meta_description
     };
-    reader.readAsDataURL(e.target.files[0])
+    const result = await createRecord(data, ApiEndPoints.ADD_CATEGORIS);
+    if (result?.status === 201) {
+      setLoading(false);
+      navigate(Routing.Categories)
+      toast.success(result?.message);
+    } else {
+      setLoading(false);
+      toast.error(result?.message);
+    }
   }
 
   return (
@@ -274,7 +279,15 @@ const AddCategories = (props) => {
                       </label>}
                     <input type="hidden" defaultValue="" name="image" />
                     <div className="invisible" style={{ width: 1, height: 1 }}>
-                      <input type="file" onChange={handleImg} id="categoryImageUpload" />
+                      <input
+                        type="file"
+                        onChange={(e) => setCategoriDetail((option) => ({
+                          ...option,
+                          image: e.target.files[0],
+                          image_url: URL.createObjectURL(e.target.files[0])
+                        }))}
+                        id="categoryImageUpload"
+                      />
                     </div>
                     {
                       categoriDetail.image_url !== null &&
@@ -313,8 +326,12 @@ const AddCategories = (props) => {
                               type="radio"
                               name="status"
                               id="status0"
-                              onChange={handleCategoryStatus}
-                              checked
+                              value={0}
+                              checked={categoriDetail.status === 0}
+                              onChange={(e) => setCategoriDetail((option) => ({
+                                ...option,
+                                status: 0
+                              }))}
                             />
                             <span className="radio-checked">
                               <span />
@@ -328,7 +345,12 @@ const AddCategories = (props) => {
                               type="radio"
                               name="status"
                               id="status1"
-                              onChange={handleCategoryStatus}
+                              value={1}
+                              checked={categoriDetail.status === 1}
+                              onChange={(e) => setCategoriDetail((option) => ({
+                                ...option,
+                                status: 1
+                              }))}
                             />
                             <span className="radio-checked" >
                               <span />
@@ -355,7 +377,12 @@ const AddCategories = (props) => {
                               type="radio"
                               name="include_in_nav"
                               id="include_in_nav0"
-                              onChange={handleCategoryStor_menu}
+                              value={0}
+                              checked={categoriDetail.include_in_store_menu === 0}
+                              onChange={(e) => setCategoriDetail((option) => ({
+                                ...option,
+                                include_in_store_menu: 0
+                              }))}
                             />
                             <span className="radio-checked">
                               <span />
@@ -369,8 +396,12 @@ const AddCategories = (props) => {
                               type="radio"
                               name="include_in_nav"
                               id="include_in_nav1"
-                              onChange={handleCategoryStor_menu}
-                              checked
+                              value={1}
+                              checked={categoriDetail.include_in_store_menu === 1}
+                              onChange={(e) => setCategoriDetail((option) => ({
+                                ...option,
+                                include_in_store_menu: 1
+                              }))}
                             />
                             <span className="radio-checked">
                               <span />
@@ -389,7 +420,7 @@ const AddCategories = (props) => {
             <button type="button" className="button critical outline">
               <span>Cancel</span>
             </button>
-            <button type="button" className="button primary">
+            <button type="button" onClick={handleSubmit} className="button primary">
               <span>Save</span>
             </button>
           </div>
