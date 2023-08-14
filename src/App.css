@@ -46,6 +46,12 @@
   background-color: #e6eef9;
 }
 
+.image-uploader-border {
+  border: 2px dashed var(--border);
+  border-radius: 5px;
+  padding: 1rem 1.5rem;
+}
+
 .button.outline.critical {
   background-color: rgba(0, 0, 0, 0);
   box-shadow: none;
@@ -2826,4 +2832,8 @@ video {
   display: inline;
   max-width: 100%;
   max-height: 100%;
+}
+
+.w-100{
+  width: 100%;
 }

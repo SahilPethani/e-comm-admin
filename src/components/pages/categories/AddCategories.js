@@ -1,13 +1,81 @@
 import React, { useEffect, useState } from "react";
 import Editor from "../../common/Editor";
+import { toast } from "react-toastify";
+import { connect } from "react-redux";
+import { createRecord } from "../../apis/services/CommonApiService";
+import { ApiEndPoints } from "../../apis/ApiEndPoints";
+import { useNavigate } from "react-router-dom";
+import { Routing } from "../../shared/constants/routing";
 
-const AddCategories = () => {
+const AddCategories = (props) => {
+  const { authUserDetails } = props;
+  const navigate = useNavigate();
+
   const [editorLoaded, setEditorLoaded] = useState(false);
-  const [data, setData] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setEditorLoaded(true);
   }, []);
+
+  const [categoriDetail, setCategoriDetail] = useState({
+    name: "",
+    Description: "",
+    image: null,
+    image_url: null,
+    status: 0,
+    include_in_store_menu: 1,
+    parent_category: "",
+    url_key: "",
+    meta_title: "",
+    meta_keywords: "",
+    meta_description: ""
+  })
+
+  const handleCategoryDetail = (e) => {
+    const { name } = e.target
+    const { value } = e.target
+    setCategoriDetail({ ...categoriDetail, [name]: value });
+  }
+
+  const handleSubmit = async () => {
+    setLoading(true);
+    const user_id = authUserDetails?.userId;
+    // var bodyFormData = new FormData();
+    // bodyFormData.append("name", categoriDetail.name);
+    // bodyFormData.append("description", categoriDetail.Description);
+    // bodyFormData.append("category_banner", categoriDetail?.image);
+    // bodyFormData.append("user", user_id);
+    // bodyFormData.append("status", categoriDetail.status);
+    // bodyFormData.append("include_in_store_menu", categoriDetail.include_in_store_menu);
+    // bodyFormData.append("url_key", categoriDetail.url_key);
+    // bodyFormData.append("meta_title", categoriDetail.meta_title);
+    // bodyFormData.append("meta_keywords", categoriDetail.meta_keywords);
+    // bodyFormData.append("meta_description", categoriDetail.meta_description);
+
+    let data = {
+      name: categoriDetail.name,
+      description: categoriDetail.Description,
+      user: user_id,
+      // category_banner: categoriDetail?.image,
+      status: categoriDetail.status,
+      include_in_store_menu: categoriDetail.include_in_store_menu,
+      // parent_category: categoriDetail.parent_category,
+      url_key: categoriDetail.url_key,
+      meta_title: categoriDetail.meta_title,
+      meta_keywords: categoriDetail.meta_keywords,
+      meta_description: categoriDetail.meta_description
+    };
+    const result = await createRecord(data, ApiEndPoints.ADD_CATEGORIS);
+    if (result?.status === 201) {
+      setLoading(false);
+      navigate(Routing.Categories)
+      toast.success(result?.message);
+    } else {
+      setLoading(false);
+      toast.error(result?.message);
+    }
+  }
 
   return (
     <>
@@ -48,7 +116,7 @@ const AddCategories = () => {
                       <div className="form-field-container null">
                         <label htmlFor="name">Name</label>
                         <div className="field-wrapper flex flex-grow">
-                          <input type="text" name="name" defaultValue="" />
+                          <input type="text" name="name" onChange={handleCategoryDetail} value={categoriDetail.name} defaultValue="" />
                           <div className="field-border" />
                         </div>
                       </div>
@@ -96,9 +164,12 @@ const AddCategories = () => {
                         </div>
 
                         <Editor
-                          name="description"
+                          name="Description"
                           onChange={(data) => {
-                            setData(data);
+                            setCategoriDetail((option) => ({
+                              ...option,
+                              Description: data
+                            }))
                           }}
                           editorLoaded={editorLoaded}
                         />
@@ -117,7 +188,7 @@ const AddCategories = () => {
                       <div className="form-field-container null">
                         <label htmlFor="url_key">Url key</label>
                         <div className="field-wrapper flex flex-grow">
-                          <input type="text" name="url_key" defaultValue="" />
+                          <input type="text" name="url_key" onChange={handleCategoryDetail} value={categoriDetail.url_key} defaultValue="" />
                           <div className="field-border" />
                         </div>
                       </div>
@@ -127,6 +198,8 @@ const AddCategories = () => {
                           <input
                             type="text"
                             name="meta_title"
+                            onChange={handleCategoryDetail}
+                            value={categoriDetail.meta_title}
                             defaultValue=""
                           />
                           <div className="field-border" />
@@ -136,7 +209,9 @@ const AddCategories = () => {
                         <label htmlFor="meta_keywords">Meta keywords</label>
                         <div className="field-wrapper flex flex-grow">
                           <input
+                            value={categoriDetail.meta_keywords}
                             type="text"
+                            onChange={handleCategoryDetail}
                             name="meta_keywords"
                             defaultValue=""
                           />
@@ -150,7 +225,9 @@ const AddCategories = () => {
                         <div className="field-wrapper flex flex-grow">
                           <textarea
                             type="text"
+                            value={categoriDetail.meta_description}
                             className="form-field"
+                            onChange={handleCategoryDetail}
                             id="meta_description"
                             name="meta_description"
                             defaultValue={""}
@@ -170,65 +247,69 @@ const AddCategories = () => {
                 </div>
                 <div className="card-section border-b box-border">
                   <div className="card-session-content pt-lg">
-                    {/* <label
-                      htmlFor="categoryImageUpload"
-                      className="flex flex-col justify-center image-uploader"
-                    >
-                      <div className="uploader-icon flex justify-center">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-5 w-5"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      </div>
-                      <div className="flex justify-center">
-                        <button type="button" className="button default">
-                          <span>Add image</span>
-                        </button>
-                      </div>
-                      <div className="flex justify-center mt-1">
-                        <span style={{ color: "#6d7175", fontSize: "1.2rem" }}>
-                          click to upload an image
-                        </span>
-                      </div>
-                    </label> */}
-                    <img
-                      className="image-uploader-border"
-                      src="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg"
-                      alt="img"
-                    />
-                    <span className="remove cursor-pointer text-critical fill-current">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width={16}
-                        height={16}
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth={2}
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="feather feather-trash-2"
+                    {categoriDetail.image_url === null &&
+                      <label
+                        htmlFor="categoryImageUpload"
+                        className="flex flex-col justify-center image-uploader"
                       >
-                        <polyline points="3 6 5 6 21 6" />
-                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                        <line x1={10} y1={11} x2={10} y2={17} />
-                        <line x1={14} y1={11} x2={14} y2={17} />
-                      </svg>
-                    </span>
-
+                        <div className="uploader-icon flex justify-center">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-5 w-5"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                        </div>
+                        <div className="flex justify-center">
+                          <div type="button" className="button default">
+                            <span>Add image</span>
+                          </div>
+                        </div>
+                        <div className="flex justify-center mt-1">
+                          <span style={{ color: "#6d7175", fontSize: "1.2rem" }}>
+                            click to upload an image
+                          </span>
+                        </div>
+                      </label>}
                     <input type="hidden" defaultValue="" name="image" />
                     <div className="invisible" style={{ width: 1, height: 1 }}>
-                      <input type="file" id="categoryImageUpload" />
+                      <input
+                        type="file"
+                        onChange={(e) => setCategoriDetail((option) => ({
+                          ...option,
+                          image: e.target.files[0],
+                          image_url: URL.createObjectURL(e.target.files[0])
+                        }))}
+                        id="categoryImageUpload"
+                      />
                     </div>
+                    {
+                      categoriDetail.image_url !== null &&
+                      <img
+                        className="image-uploader-border"
+                        src={categoriDetail.image_url}
+                        alt="img"
+                      />
+                    }
                   </div>
+                  {
+                    categoriDetail.image_url !== null &&
+                    <button
+                      onClick={() =>
+                        setCategoriDetail((option) => ({
+                          ...option,
+                          image_url: null
+                        }))}
+                      className="button critical outline w-100 mt-1">
+                      <span>Remove</span>
+                    </button>
+                  }
                 </div>
               </div>
               <div className="card shadow">
@@ -245,8 +326,12 @@ const AddCategories = () => {
                               type="radio"
                               name="status"
                               id="status0"
-                              defaultValue={0}
-                              defaultChecked=""
+                              value={0}
+                              checked={categoriDetail.status === 0}
+                              onChange={(e) => setCategoriDetail((option) => ({
+                                ...option,
+                                status: 0
+                              }))}
                             />
                             <span className="radio-checked">
                               <span />
@@ -260,9 +345,14 @@ const AddCategories = () => {
                               type="radio"
                               name="status"
                               id="status1"
-                              defaultValue={1}
+                              value={1}
+                              checked={categoriDetail.status === 1}
+                              onChange={(e) => setCategoriDetail((option) => ({
+                                ...option,
+                                status: 1
+                              }))}
                             />
-                            <span className="radio-checked">
+                            <span className="radio-checked" >
                               <span />
                             </span>
                             <span className="pl-1">Enabled</span>
@@ -287,8 +377,12 @@ const AddCategories = () => {
                               type="radio"
                               name="include_in_nav"
                               id="include_in_nav0"
-                              defaultValue={0}
-                              defaultChecked=""
+                              value={0}
+                              checked={categoriDetail.include_in_store_menu === 0}
+                              onChange={(e) => setCategoriDetail((option) => ({
+                                ...option,
+                                include_in_store_menu: 0
+                              }))}
                             />
                             <span className="radio-checked">
                               <span />
@@ -302,9 +396,16 @@ const AddCategories = () => {
                               type="radio"
                               name="include_in_nav"
                               id="include_in_nav1"
-                              defaultValue={1}
+                              value={1}
+                              checked={categoriDetail.include_in_store_menu === 1}
+                              onChange={(e) => setCategoriDetail((option) => ({
+                                ...option,
+                                include_in_store_menu: 1
+                              }))}
                             />
-                            <span className="radio-unchecked" />
+                            <span className="radio-checked">
+                              <span />
+                            </span>
                             <span className="pl-1">Yes</span>
                           </label>
                         </div>
@@ -319,7 +420,7 @@ const AddCategories = () => {
             <button type="button" className="button critical outline">
               <span>Cancel</span>
             </button>
-            <button type="button" className="button primary">
+            <button type="button" onClick={handleSubmit} className="button primary">
               <span>Save</span>
             </button>
           </div>
@@ -329,4 +430,9 @@ const AddCategories = () => {
   );
 };
 
-export default AddCategories;
+const mapStateToProps = (state) => {
+  return {
+    authUserDetails: state.auth.userInfo,
+  };
+};
+export default connect(mapStateToProps)(AddCategories);
