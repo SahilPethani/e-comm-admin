@@ -4,7 +4,7 @@ import { ApiEndPoints } from "../../apis/ApiEndPoints";
 import { fetchList } from "../../apis/services/CommonApiService";
 
 const Categories = () => {
-
+  
   const [searchFilters, setSearchFilters] = useState({
     searchText: "",
     status: "",
@@ -12,21 +12,21 @@ const Categories = () => {
     count: 10,
     page: "",
     totalPages: "",
-    totalCount: ""
+    totalCount: "",
   });
-  const [checked, setChecked] = useState(0)
-  const [categoryList, setCategoryList] = useState([])
-  const [selected, setSelected] = useState([])
+  const [checked, setChecked] = useState(0);
+  const [categoryList, setCategoryList] = useState([]);
+  const [selected, setSelected] = useState([]);
 
   useEffect(() => {
-    const data = categoryList.filter((item) => item.select === 1)
-    setSelected(data)
+    const data = categoryList.filter((item) => item.select === 1);
+    setSelected(data);
     if (data.length === categoryList.length) {
-      setChecked(1)
+      setChecked(1);
     } else {
-      setChecked(0)
+      setChecked(0);
     }
-  }, [categoryList, checked])
+  }, [categoryList, checked]);
 
   const handleTaxSearch = (event) => {
     const { value } = event.target;
@@ -39,27 +39,27 @@ const Categories = () => {
   const getCategorisList = useCallback(async () => {
     const result = await fetchList(
       ApiEndPoints.GET_CATEGORIS +
-      `?page=${searchFilters.page}&status=${searchFilters.status}&include_in_menu=${searchFilters.include_in_menu}&searchText=${searchFilters.searchText}&count=${searchFilters.count}`
+        `?page=${searchFilters.page}&status=${searchFilters.status}&include_in_menu=${searchFilters.include_in_menu}&searchText=${searchFilters.searchText}&count=${searchFilters.count}`
     );
     if (result?.status === 200) {
-      const list = []
+      const list = [];
       for (var j in result.data) {
         list.push({
           name: result.data[j].name,
           status: result.data[j].status,
           include_in_menu: result.data[j].include_in_store_menu,
           select: 0,
-        })
+        });
       }
-      setCategoryList(list)
+      setCategoryList(list);
       setSearchFilters((option) => ({
         ...option,
         totalPages: result.totalPages,
         page: result.currentPage,
-        totalCount: result.totalCategorysCount
-      }))
+        totalCount: result.totalCategorysCount,
+      }));
     } else {
-      setCategoryList([])
+      setCategoryList([]);
     }
   }, [
     searchFilters.include_in_menu,
@@ -95,15 +95,20 @@ const Categories = () => {
                 <div className="form-field-container null">
                   <div className="field-wrapper radio-field">
                     <label>
-                      <input type="checkbox" value={checked} checked={checked === 1 ? true : false} onChange={(e) => {
-                        categoryList.forEach((elements, index) => {
-                          categoryList[index].select = e.target.checked === true ? 1 : 0
-                        })
-                        setChecked(e.target.checked === true ? 1 : 0)
-                      }} />
+                      <input
+                        type="checkbox"
+                        value={checked}
+                        checked={checked === 1 ? true : false}
+                        onChange={(e) => {
+                          categoryList.forEach((elements, index) => {
+                            categoryList[index].select =
+                              e.target.checked === true ? 1 : 0;
+                          });
+                          setChecked(e.target.checked === true ? 1 : 0);
+                        }}
+                      />
                       <span className="checkbox-checked">
-                        {
-                          checked !== 0 &&
+                        {checked !== 0 && (
                           <svg
                             viewBox="0 0 20 20"
                             focusable="false"
@@ -111,7 +116,7 @@ const Categories = () => {
                           >
                             <path d="m8.315 13.859-3.182-3.417a.506.506 0 0 1 0-.684l.643-.683a.437.437 0 0 1 .642 0l2.22 2.393 4.942-5.327a.436.436 0 0 1 .643 0l.643.684a.504.504 0 0 1 0 .683l-5.91 6.35a.437.437 0 0 1-.642 0" />
                           </svg>
-                        }
+                        )}
                       </span>
                       <span className="pl-05" />
                     </label>
@@ -146,12 +151,15 @@ const Categories = () => {
                   <div className="filter">
                     <div className="form-field-container dropdown null">
                       <div className="field-wrapper flex flex-grow items-baseline">
-                        <select className="form-field" onChange={(e) => {
-                          setSearchFilters((option) => ({
-                            ...option,
-                            status: e.target.value
-                          }))
-                        }}>
+                        <select
+                          className="form-field"
+                          onChange={(e) => {
+                            setSearchFilters((option) => ({
+                              ...option,
+                              status: e.target.value,
+                            }));
+                          }}
+                        >
                           <option value="">All</option>
                           <option value={1}>Enabled</option>
                           <option value={0}>Disabled</option>
@@ -181,12 +189,15 @@ const Categories = () => {
                   <div className="filter">
                     <div className="form-field-container dropdown null">
                       <div className="field-wrapper flex flex-grow items-baseline">
-                        <select className="form-field" onChange={(e) => {
-                          setSearchFilters((option) => ({
-                            ...option,
-                            include_in_menu: e.target.value
-                          }))
-                        }}>
+                        <select
+                          className="form-field"
+                          onChange={(e) => {
+                            setSearchFilters((option) => ({
+                              ...option,
+                              include_in_menu: e.target.value,
+                            }));
+                          }}
+                        >
                           <option value="">All</option>
                           <option value={1}>Yes</option>
                           <option value={0}>No</option>
@@ -211,8 +222,7 @@ const Categories = () => {
             </tr>
           </thead>
           <tbody>
-            {
-              selected.length > 0 &&
+            {selected.length > 0 && (
               <tr>
                 <td colSpan={100} style={{ borderTop: 0 }}>
                   <div className="inline-flex border border-divider rounded justify-items-start">
@@ -231,9 +241,9 @@ const Categories = () => {
                   </div>
                 </td>
               </tr>
-            }
-            {
-              categoryList && categoryList.map((item, index) => (
+            )}
+            {categoryList &&
+              categoryList.map((item, index) => (
                 <tr>
                   <td style={{ width: "2rem" }}>
                     <div className="form-field-container null">
@@ -244,21 +254,22 @@ const Categories = () => {
                             value={item.select}
                             checked={item.select === 1 ? true : false}
                             onChange={(e) => {
-                              setChecked(0)
+                              setChecked(0);
                               setCategoryList(
                                 categoryList.map((items, index1) =>
                                   index1 === index
                                     ? {
-                                      ...items,
-                                      select: e.target.checked === true ? 1 : 0
-                                    }
+                                        ...items,
+                                        select:
+                                          e.target.checked === true ? 1 : 0,
+                                      }
                                     : items
-                                ))
+                                )
+                              );
                             }}
                           />
                           <span className="checkbox-checked">
-                            {
-                              item.select !== 0 &&
+                            {item.select !== 0 && (
                               <svg
                                 viewBox="0 0 20 20"
                                 focusable="false"
@@ -266,7 +277,7 @@ const Categories = () => {
                               >
                                 <path d="m8.315 13.859-3.182-3.417a.506.506 0 0 1 0-.684l.643-.683a.437.437 0 0 1 .642 0l2.22 2.393 4.942-5.327a.436.436 0 0 1 .643 0l.643.684a.504.504 0 0 1 0 .683l-5.91 6.35a.437.437 0 0 1-.642 0" />
                               </svg>
-                            }
+                            )}
                           </span>
                           <span className="pl-05" />
                         </label>
@@ -286,7 +297,9 @@ const Categories = () => {
                   <td>
                     <div className="flex justify-center">
                       <span
-                        className={`${item.status === 0 ? "critical" : "success"} dot`}
+                        className={`${
+                          item.status === 0 ? "critical" : "success"
+                        } dot`}
                         style={{ width: "1.2rem", height: "1.2rem" }}
                       />
                     </div>
@@ -299,8 +312,7 @@ const Categories = () => {
                     </div>
                   </td>
                 </tr>
-              ))
-            }
+              ))}
           </tbody>
         </table>
         <div className="pagination flex px-2">
@@ -313,12 +325,16 @@ const Categories = () => {
                 <div className="" style={{ width: "5rem" }}>
                   <div className="form-field-container null">
                     <div className="field-wrapper flex flex-grow">
-                      <input type="text" value={searchFilters.count} onChange={(e) => {
-                        setSearchFilters((option) => ({
-                          ...option,
-                          count: e.target.value
-                        }))
-                      }} />
+                      <input
+                        type="text"
+                        value={searchFilters.count}
+                        onChange={(e) => {
+                          setSearchFilters((option) => ({
+                            ...option,
+                            count: e.target.value,
+                          }));
+                        }}
+                      />
                       <div className="field-border" />
                     </div>
                   </div>
@@ -335,12 +351,16 @@ const Categories = () => {
               <div className="current" style={{ width: "5rem" }}>
                 <div className="form-field-container null">
                   <div className="field-wrapper flex flex-grow">
-                    <input type="text" value={searchFilters.page} onChange={(e) => {
-                      setSearchFilters((option) => ({
-                        ...option,
-                        page: e.target.value
-                      }))
-                    }} />
+                    <input
+                      type="text"
+                      value={searchFilters.page}
+                      onChange={(e) => {
+                        setSearchFilters((option) => ({
+                          ...option,
+                          page: e.target.value,
+                        }));
+                      }}
+                    />
                     <div className="field-border" />
                   </div>
                 </div>

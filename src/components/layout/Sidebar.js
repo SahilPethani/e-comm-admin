@@ -97,9 +97,9 @@ const Sidebar = (props) => {
                     </div>
                   </div>
                   {authUserDetails &&
-                    menu?.item.map((subMenu, ind) => (
+                    menu?.item.map((subMenu, i) => (
                       <>
-                        <ul key={ind} className="item-group">
+                        <ul key={i} className="item-group">
                           <li
                             className={`${curentPage === "/" + subMenu?.value && "active "
                               } nav-item`}

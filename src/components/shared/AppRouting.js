@@ -80,6 +80,11 @@ const routes = [
     component: AddCategories,
     isPrivateRoute: true,
   },
+  {
+    path: Routing.Products,
+    component: Product,
+    isPrivateRoute: true,
+  },
 ];
 const AppRouting = () => {
   return (
