@@ -2794,6 +2794,11 @@ video {
   cursor: pointer;
   position: relative;
 }
+.image-uploader-border {
+  border: 2px dashed var(--border);
+  border-radius: 5px;
+  padding: 1rem 1.5rem;
+}
 
 .image-uploader .loading {
   background-color: #fff;

@@ -170,7 +170,7 @@ const AddCategories = () => {
                 </div>
                 <div className="card-section border-b box-border">
                   <div className="card-session-content pt-lg">
-                    <label
+                    {/* <label
                       htmlFor="categoryImageUpload"
                       className="flex flex-col justify-center image-uploader"
                     >
@@ -198,7 +198,32 @@ const AddCategories = () => {
                           click to upload an image
                         </span>
                       </div>
-                    </label>
+                    </label> */}
+                    <img
+                      className="image-uploader-border"
+                      src="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg"
+                      alt="img"
+                    />
+                    <span className="remove cursor-pointer text-critical fill-current">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width={16}
+                        height={16}
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="feather feather-trash-2"
+                      >
+                        <polyline points="3 6 5 6 21 6" />
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                        <line x1={10} y1={11} x2={10} y2={17} />
+                        <line x1={14} y1={11} x2={14} y2={17} />
+                      </svg>
+                    </span>
+
                     <input type="hidden" defaultValue="" name="image" />
                     <div className="invisible" style={{ width: 1, height: 1 }}>
                       <input type="file" id="categoryImageUpload" />
@@ -237,7 +262,9 @@ const AddCategories = () => {
                               id="status1"
                               defaultValue={1}
                             />
-                            <span className="radio-unchecked" />
+                            <span className="radio-checked">
+                              <span />
+                            </span>
                             <span className="pl-1">Enabled</span>
                           </label>
                         </div>
