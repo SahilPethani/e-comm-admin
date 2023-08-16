@@ -1635,13 +1635,18 @@ span.flatpickr-weekday {
 }
 
 .product-image-manager img {
-  max-width: 100%;
+  max-height: 150px;
+  max-width: 150px;
+  min-height: 150px;
+  min-width: 150px;
+  overflow: hidden;
+  object-fit: contain;
 }
 
 .product-image-manager .image-list {
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   display: grid;
-  grid-gap: 8px;
+  grid-gap: 12px;
   grid-auto-rows: 1fr;
 }
 
@@ -1655,6 +1660,8 @@ span.flatpickr-weekday {
   border: 1px solid #e1e1e1;
   background: #fff;
   max-width: 150px;
+  min-height: 150px;
+  min-width: 150px;
 }
 
 .product-image-manager .image-list .uploader {
@@ -1666,12 +1673,16 @@ span.flatpickr-weekday {
   align-items: center;
   border: 2px dashed #e1e1e1;
   background: #fff;
+  max-height: 150px;
   max-width: 150px;
+  min-height: 150px;
+  min-width: 150px;
 }
 
 .product-image-manager .image-list .grid-item:first-child {
   grid-column: 1 / span 2;
-  max-width: 100%;
+  max-height: 150px;
+  max-width: 150px;
 }
 
 .product-image-manager .image-list .grid-item:first-child:after {
@@ -2518,8 +2529,7 @@ video {
 .pl-2 {
   padding-left: 2rem;
 }
-.mx-auto
-{
+.mx-auto {
   margin: 0 auto;
 }
 
@@ -2786,7 +2796,7 @@ video {
   width: 100%;
 }
 .uploader-icon {
-  width: 3.85rem;
+  min-width: 3.85rem;
   border-radius: 100%;
   color: #fff;
   background-color: #5c5f62;
@@ -2835,6 +2845,9 @@ video {
   max-height: 100%;
 }
 
-.w-100{
+.w-100 {
   width: 100%;
+}
+.uploadicon {
+  cursor: pointer;
 }

@@ -1,27 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
-import product1 from "../../../assets/plv1527-Brown-thumb.png";
-import product2 from "../../../assets/plv2996-Purple-thumb.png";
 import { fetchList } from "../../apis/services/CommonApiService";
 import { ApiEndPoints } from "../../apis/ApiEndPoints";
-const product = [
-  {
-    image: product1,
-    productname: "Nike revolution 5",
-    price: "$300.00",
-    SKU: "10",
-    Qty: "20",
-    Status: "",
-  },
-  {
-    image: product2,
-    productname: "puma revolution 5",
-    price: "$255.00",
-    SKU: "NJC44203-Brown-M",
-    Qty: "999",
-    Status: "success",
-  },
-];
-
 
 const Product = () => {
 
@@ -513,5 +492,9 @@ const Product = () => {
     </>
   );
 };
-
-export default Product;
+const mapStateToProps = (state) => {
+  return {
+    authUserDetails: state.auth.userInfo,
+  };
+};
+export default connect(mapStateToProps)(Product);

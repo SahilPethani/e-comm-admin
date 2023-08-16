@@ -12,4 +12,6 @@ export const Routing = {
 
   Categories: "/categories",
   AddCategories: "/categories/new",
+
+  Product_new: "/products/new",
 };
