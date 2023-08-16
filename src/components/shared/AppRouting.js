@@ -13,7 +13,9 @@ import NoteExit404 from "../layout/404";
 
 const Login = lazy(() => import("../pages/login/Login"));
 const Dashboard = lazy(() => import("../pages/dashboard/Dashboard"));
+const Product_new = lazy(() => import("../pages/new_product/New_product"));
 const Product = lazy(() => import("../pages/products/Products"));
+
 const Coupon = lazy(() => import("../pages/coupon/Coupon"));
 
 const Store_setting = lazy(() => import("../pages/setting/tabs/Store"));
@@ -83,6 +85,11 @@ const routes = [
   {
     path: Routing.Products,
     component: Product,
+    isPrivateRoute: true,
+  },
+  {
+    path: Routing.Product_new,
+    component: Product_new,
     isPrivateRoute: true,
   },
 ];

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import product1 from "../../../assets/plv1527-Brown-thumb.png";
 import product2 from "../../../assets/plv2996-Purple-thumb.png";
+import { connect } from "react-redux";
 const product = [
   {
     image: product1,
@@ -20,7 +21,8 @@ const product = [
   },
 ];
 
-const Product = () => {
+const Product = (props) => {
+  const { authUserDetails } = props;
   const [searchFilters, setSearchFilters] = useState({
     searchProduct: "",
     status: "",
@@ -324,5 +326,9 @@ const Product = () => {
     </>
   );
 };
-
-export default Product;
+const mapStateToProps = (state) => {
+  return {
+    authUserDetails: state.auth.userInfo,
+  };
+};
+export default connect(mapStateToProps)(Product);

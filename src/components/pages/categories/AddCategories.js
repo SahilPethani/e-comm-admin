@@ -29,14 +29,14 @@ const AddCategories = (props) => {
     url_key: "",
     meta_title: "",
     meta_keywords: "",
-    meta_description: ""
-  })
+    meta_description: "",
+  });
 
   const handleCategoryDetail = (e) => {
-    const { name } = e.target
-    const { value } = e.target
+    const { name } = e.target;
+    const { value } = e.target;
     setCategoriDetail({ ...categoriDetail, [name]: value });
-  }
+  };
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -64,18 +64,18 @@ const AddCategories = (props) => {
       url_key: categoriDetail.url_key,
       meta_title: categoriDetail.meta_title,
       meta_keywords: categoriDetail.meta_keywords,
-      meta_description: categoriDetail.meta_description
+      meta_description: categoriDetail.meta_description,
     };
     const result = await createRecord(data, ApiEndPoints.ADD_CATEGORIS);
     if (result?.status === 201) {
       setLoading(false);
-      navigate(Routing.Categories)
+      navigate(Routing.Categories);
       toast.success(result?.message);
     } else {
       setLoading(false);
       toast.error(result?.message);
     }
-  }
+  };
 
   return (
     <>
@@ -116,7 +116,13 @@ const AddCategories = (props) => {
                       <div className="form-field-container null">
                         <label htmlFor="name">Name</label>
                         <div className="field-wrapper flex flex-grow">
-                          <input type="text" name="name" onChange={handleCategoryDetail} value={categoriDetail.name} defaultValue="" />
+                          <input
+                            type="text"
+                            name="name"
+                            onChange={handleCategoryDetail}
+                            value={categoriDetail.name}
+                            defaultValue=""
+                          />
                           <div className="field-border" />
                         </div>
                       </div>
@@ -168,8 +174,8 @@ const AddCategories = (props) => {
                           onChange={(data) => {
                             setCategoriDetail((option) => ({
                               ...option,
-                              Description: data
-                            }))
+                              Description: data,
+                            }));
                           }}
                           editorLoaded={editorLoaded}
                         />
@@ -188,7 +194,13 @@ const AddCategories = (props) => {
                       <div className="form-field-container null">
                         <label htmlFor="url_key">Url key</label>
                         <div className="field-wrapper flex flex-grow">
-                          <input type="text" name="url_key" onChange={handleCategoryDetail} value={categoriDetail.url_key} defaultValue="" />
+                          <input
+                            type="text"
+                            name="url_key"
+                            onChange={handleCategoryDetail}
+                            value={categoriDetail.url_key}
+                            defaultValue=""
+                          />
                           <div className="field-border" />
                         </div>
                       </div>
@@ -247,7 +259,7 @@ const AddCategories = (props) => {
                 </div>
                 <div className="card-section border-b box-border">
                   <div className="card-session-content pt-lg">
-                    {categoriDetail.image_url === null &&
+                    {categoriDetail.image_url === null && (
                       <label
                         htmlFor="categoryImageUpload"
                         className="flex flex-col justify-center image-uploader"
@@ -272,44 +284,49 @@ const AddCategories = (props) => {
                           </div>
                         </div>
                         <div className="flex justify-center mt-1">
-                          <span style={{ color: "#6d7175", fontSize: "1.2rem" }}>
+                          <span
+                            style={{ color: "#6d7175", fontSize: "1.2rem" }}
+                          >
                             click to upload an image
                           </span>
                         </div>
-                      </label>}
+                      </label>
+                    )}
                     <input type="hidden" defaultValue="" name="image" />
                     <div className="invisible" style={{ width: 1, height: 1 }}>
                       <input
                         type="file"
-                        onChange={(e) => setCategoriDetail((option) => ({
-                          ...option,
-                          image: e.target.files[0],
-                          image_url: URL.createObjectURL(e.target.files[0])
-                        }))}
+                        onChange={(e) =>
+                          setCategoriDetail((option) => ({
+                            ...option,
+                            image: e.target.files[0],
+                            image_url: URL.createObjectURL(e.target.files[0]),
+                          }))
+                        }
                         id="categoryImageUpload"
                       />
                     </div>
-                    {
-                      categoriDetail.image_url !== null &&
+                    {categoriDetail.image_url !== null && (
                       <img
                         className="image-uploader-border"
                         src={categoriDetail.image_url}
                         alt="img"
                       />
-                    }
+                    )}
                   </div>
-                  {
-                    categoriDetail.image_url !== null &&
+                  {categoriDetail.image_url !== null && (
                     <button
                       onClick={() =>
                         setCategoriDetail((option) => ({
                           ...option,
-                          image_url: null
-                        }))}
-                      className="button critical outline w-100 mt-1">
+                          image_url: null,
+                        }))
+                      }
+                      className="button critical outline w-100 mt-1"
+                    >
                       <span>Remove</span>
                     </button>
-                  }
+                  )}
                 </div>
               </div>
               <div className="card shadow">
@@ -328,10 +345,12 @@ const AddCategories = (props) => {
                               id="status0"
                               value={0}
                               checked={categoriDetail.status === 0}
-                              onChange={(e) => setCategoriDetail((option) => ({
-                                ...option,
-                                status: 0
-                              }))}
+                              onChange={(e) =>
+                                setCategoriDetail((option) => ({
+                                  ...option,
+                                  status: 0,
+                                }))
+                              }
                             />
                             <span className="radio-checked">
                               <span />
@@ -347,12 +366,14 @@ const AddCategories = (props) => {
                               id="status1"
                               value={1}
                               checked={categoriDetail.status === 1}
-                              onChange={(e) => setCategoriDetail((option) => ({
-                                ...option,
-                                status: 1
-                              }))}
+                              onChange={(e) =>
+                                setCategoriDetail((option) => ({
+                                  ...option,
+                                  status: 1,
+                                }))
+                              }
                             />
-                            <span className="radio-checked" >
+                            <span className="radio-checked">
                               <span />
                             </span>
                             <span className="pl-1">Enabled</span>
@@ -378,11 +399,15 @@ const AddCategories = (props) => {
                               name="include_in_nav"
                               id="include_in_nav0"
                               value={0}
-                              checked={categoriDetail.include_in_store_menu === 0}
-                              onChange={(e) => setCategoriDetail((option) => ({
-                                ...option,
-                                include_in_store_menu: 0
-                              }))}
+                              checked={
+                                categoriDetail.include_in_store_menu === 0
+                              }
+                              onChange={(e) =>
+                                setCategoriDetail((option) => ({
+                                  ...option,
+                                  include_in_store_menu: 0,
+                                }))
+                              }
                             />
                             <span className="radio-checked">
                               <span />
@@ -397,11 +422,15 @@ const AddCategories = (props) => {
                               name="include_in_nav"
                               id="include_in_nav1"
                               value={1}
-                              checked={categoriDetail.include_in_store_menu === 1}
-                              onChange={(e) => setCategoriDetail((option) => ({
-                                ...option,
-                                include_in_store_menu: 1
-                              }))}
+                              checked={
+                                categoriDetail.include_in_store_menu === 1
+                              }
+                              onChange={(e) =>
+                                setCategoriDetail((option) => ({
+                                  ...option,
+                                  include_in_store_menu: 1,
+                                }))
+                              }
                             />
                             <span className="radio-checked">
                               <span />
@@ -420,7 +449,11 @@ const AddCategories = (props) => {
             <button type="button" className="button critical outline">
               <span>Cancel</span>
             </button>
-            <button type="button" onClick={handleSubmit} className="button primary">
+            <button
+              type="button"
+              onClick={handleSubmit}
+              className="button primary"
+            >
               <span>Save</span>
             </button>
           </div>
