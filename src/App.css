@@ -269,6 +269,7 @@
 html input[type="text"],
 html input[type="email"],
 html input[type="password"],
+html input[type="number"],
 html input[type="tel"],
 html select,
 html textarea {

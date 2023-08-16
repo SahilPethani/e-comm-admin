@@ -4,7 +4,7 @@ import { ApiEndPoints } from "../../apis/ApiEndPoints";
 import { fetchList } from "../../apis/services/CommonApiService";
 
 const Categories = () => {
-  
+
   const [searchFilters, setSearchFilters] = useState({
     searchText: "",
     status: "",
@@ -15,8 +15,8 @@ const Categories = () => {
     totalCount: "",
   });
   const [checked, setChecked] = useState(0);
-  const [categoryList, setCategoryList] = useState([]);
   const [selected, setSelected] = useState([]);
+  const [categoryList, setCategoryList] = useState([]);
 
   useEffect(() => {
     const data = categoryList.filter((item) => item.select === 1);
@@ -28,18 +28,10 @@ const Categories = () => {
     }
   }, [categoryList, checked]);
 
-  const handleTaxSearch = (event) => {
-    const { value } = event.target;
-    setSearchFilters((prev) => ({
-      ...prev,
-      searchText: value,
-    }));
-  };
-
   const getCategorisList = useCallback(async () => {
     const result = await fetchList(
       ApiEndPoints.GET_CATEGORIS +
-        `?page=${searchFilters.page}&status=${searchFilters.status}&include_in_menu=${searchFilters.include_in_menu}&searchText=${searchFilters.searchText}&count=${searchFilters.count}`
+      `?page=${searchFilters.page}&status=${searchFilters.status}&include_in_menu=${searchFilters.include_in_menu}&searchText=${searchFilters.searchText}&count=${searchFilters.count}`
     );
     if (result?.status === 200) {
       const list = [];
@@ -48,6 +40,7 @@ const Categories = () => {
           name: result.data[j].name,
           status: result.data[j].status,
           include_in_menu: result.data[j].include_in_store_menu,
+          id: result.data[j]._id,
           select: 0,
         });
       }
@@ -133,7 +126,12 @@ const Categories = () => {
                       <div className="field-wrapper flex flex-grow">
                         <input
                           type="text"
-                          onChange={handleTaxSearch}
+                          onChange={(e) => {
+                            setSearchFilters((prev) => ({
+                              ...prev,
+                              searchText: e.target.value,
+                            }))
+                          }}
                           value={searchFilters.searchText}
                           placeholder="Category Name"
                         />
@@ -259,10 +257,10 @@ const Categories = () => {
                                 categoryList.map((items, index1) =>
                                   index1 === index
                                     ? {
-                                        ...items,
-                                        select:
-                                          e.target.checked === true ? 1 : 0,
-                                      }
+                                      ...items,
+                                      select:
+                                        e.target.checked === true ? 1 : 0,
+                                    }
                                     : items
                                 )
                               );
@@ -297,9 +295,8 @@ const Categories = () => {
                   <td>
                     <div className="flex justify-center">
                       <span
-                        className={`${
-                          item.status === 0 ? "critical" : "success"
-                        } dot`}
+                        className={`${item.status === 0 ? "critical" : "success"
+                          } dot`}
                         style={{ width: "1.2rem", height: "1.2rem" }}
                       />
                     </div>

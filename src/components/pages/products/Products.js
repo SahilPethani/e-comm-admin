@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import product1 from "../../../assets/plv1527-Brown-thumb.png";
 import product2 from "../../../assets/plv2996-Purple-thumb.png";
+import { fetchList } from "../../apis/services/CommonApiService";
+import { ApiEndPoints } from "../../apis/ApiEndPoints";
 const product = [
   {
     image: product1,
@@ -20,23 +22,88 @@ const product = [
   },
 ];
 
+
 const Product = () => {
+
+  const [productList, setProductList] = useState([])
+  const [checked, setChecked] = useState(0);
+  const [selected, setSelected] = useState([]);
+
   const [searchFilters, setSearchFilters] = useState({
-    searchProduct: "",
+    searchText: "",
     status: "",
-    include_in_menu: "",
+    sku: "",
+    quantity: "",
+    minPrice: "",
+    maxPrice: "",
     count: 10,
     page: "",
     totalPages: "",
     totalCount: "",
   });
+
+  useEffect(() => {
+    const data = productList.filter((item) => item.select === 1);
+    setSelected(data);
+    if (data.length === productList.length) {
+      setChecked(1);
+    } else {
+      setChecked(0);
+    }
+  }, [productList, checked]);
+
+  const getProductList = useCallback(async () => {
+    const result = await fetchList(
+      ApiEndPoints.GET_PRODUCT_SELLER +
+      `?page=${searchFilters.page}&searchText=${searchFilters.searchText}&minPrice=${searchFilters.minPrice}&maxPrice=${searchFilters.maxPrice}&count=${searchFilters.count}&status=${searchFilters.status}&quantity=${searchFilters.quantity}&sku=${searchFilters.sku}`
+    );
+    if (result?.status === 200) {
+      const list = [];
+      for (var j in result.data) {
+        list.push({
+          name: result.data[j].name,
+          status: result.data[j].status,
+          images: result.data[j].images[0].url,
+          price: result.data[j].price,
+          sku: result.data[j].sku,
+          quantity: result.data[j].quantity,
+          id: result.data[j]._id,
+          select: 0,
+        });
+      }
+      setProductList(list)
+      setSearchFilters((option) => ({
+        ...option,
+        totalPages: result.totalPages,
+        page: result.currentPage,
+        totalCount: result.totalProductsCount,
+      }));
+    } else {
+      setProductList([])
+    }
+  }, [
+    searchFilters.page,
+    searchFilters.status,
+    searchFilters.count,
+    searchFilters.searchText,
+    searchFilters.sku,
+    searchFilters.minPrice,
+    searchFilters.maxPrice,
+    searchFilters.quantity,
+  ]);
+
+  useEffect(() => {
+    getProductList();
+  }, [getProductList]);
+
   const handleTaxSearch = (event) => {
     const { value } = event.target;
     setSearchFilters((prev) => ({
       ...prev,
-      searchProduct: value,
+      searchText: value,
     }));
   };
+
   return (
     <>
       <div className="page-heading-2 flex justify-between items-center">
@@ -59,8 +126,29 @@ const Product = () => {
                 <div className="form-field-container null">
                   <div className="field-wrapper radio-field">
                     <label>
-                      <input type="checkbox" defaultValue={0} />
-                      <span className="checkbox-unchecked" />
+                      <input
+                        type="checkbox"
+                        value={checked}
+                        checked={checked === 1 ? true : false}
+                        onChange={(e) => {
+                          productList.forEach((elements, index) => {
+                            productList[index].select =
+                              e.target.checked === true ? 1 : 0;
+                          });
+                          setChecked(e.target.checked === true ? 1 : 0);
+                        }}
+                      />
+                      <span className="checkbox-checked">
+                        {checked !== 0 && (
+                          <svg
+                            viewBox="0 0 20 20"
+                            focusable="false"
+                            aria-hidden="true"
+                          >
+                            <path d="m8.315 13.859-3.182-3.417a.506.506 0 0 1 0-.684l.643-.683a.437.437 0 0 1 .642 0l2.22 2.393 4.942-5.327a.436.436 0 0 1 .643 0l.643.684a.504.504 0 0 1 0 .683l-5.91 6.35a.437.437 0 0 1-.642 0" />
+                          </svg>
+                        )}
+                      </span>
                       <span className="pl-05" />
                     </label>
                   </div>
@@ -106,7 +194,12 @@ const Product = () => {
                           <input
                             type="text"
                             placeholder="From"
-                            defaultValue=""
+                            onChange={(e) => {
+                              setSearchFilters((option) => ({
+                                ...option,
+                                minPrice: e.target.value,
+                              }));
+                            }}
                           />
                           <div className="field-border" />
                         </div>
@@ -115,7 +208,12 @@ const Product = () => {
                     <div style={{ width: "6rem" }}>
                       <div className="form-field-container null">
                         <div className="field-wrapper flex flex-grow">
-                          <input type="text" placeholder="To" defaultValue="" />
+                          <input type="text" placeholder="To" defaultValue="" onChange={(e) => {
+                            setSearchFilters((option) => ({
+                              ...option,
+                              maxPrice: e.target.value,
+                            }));
+                          }} />
                           <div className="field-border" />
                         </div>
                       </div>
@@ -131,7 +229,16 @@ const Product = () => {
                   <div className="filter" style={{ width: "15rem" }}>
                     <div className="form-field-container null">
                       <div className="field-wrapper flex flex-grow">
-                        <input type="text" placeholder="SKU" defaultValue="" />
+                        <input
+                          type="text"
+                          placeholder="SKU"
+                          onChange={(e) => {
+                            setSearchFilters((option) => ({
+                              ...option,
+                              sku: e.target.value,
+                            }));
+                          }}
+                        />
                         <div className="field-border" />
                       </div>
                     </div>
@@ -146,7 +253,16 @@ const Product = () => {
                   <div className="filter" style={{ width: "15rem" }}>
                     <div className="form-field-container null">
                       <div className="field-wrapper flex flex-grow">
-                        <input type="text" placeholder="Qty" defaultValue="" />
+                        <input
+                          type="number"
+                          placeholder="Qty"
+                          onChange={(e) => {
+                            setSearchFilters((option) => ({
+                              ...option,
+                              quantity: e.target.value,
+                            }));
+                          }}
+                        />
                         <div className="field-border" />
                       </div>
                     </div>
@@ -161,11 +277,16 @@ const Product = () => {
                   <div className="filter">
                     <div className="form-field-container dropdown null">
                       <div className="field-wrapper flex flex-grow items-baseline">
-                        <select className="form-field">
-                          <option selected="" value="" disabled="">
-                            Please select
-                          </option>
-                          <option value="all">All</option>
+                        <select
+                          className="form-field"
+                          onChange={(e) => {
+                            setSearchFilters((option) => ({
+                              ...option,
+                              status: e.target.value,
+                            }));
+                          }}
+                        >
+                          <option value="">All</option>
                           <option value={1}>Enabled</option>
                           <option value={0}>Disabled</option>
                         </select>
@@ -189,76 +310,127 @@ const Product = () => {
             </tr>
           </thead>
           <tbody>
-            {product
-              .filter((productdata) =>
-                productdata.productname
-                  .toLowerCase()
-                  .includes(searchFilters.searchProduct.toLowerCase())
-              )
-              .map((productdata, index) => {
-                return (
-                  <tr key={index}>
+            {selected.length > 0 && (
+              <tr>
+                <td colSpan={100} style={{ borderTop: 0 }}>
+                  <div className="inline-flex border border-divider rounded justify-items-start">
+                    <a
+                      href="#"
+                      className="font-semibold pt-075 pb-075 pl-15 pr-15"
+                    >
+                      {selected.length} selected
+                    </a>
+                    <a
+                      href="#"
+                      className="font-semibold pt-075 pb-075 pl-15 pr-15 block border-l border-divider self-center"
+                    >
+                      <span>Disable</span>
+                    </a>
+                    <a
+                      href="#"
+                      className="font-semibold pt-075 pb-075 pl-15 pr-15 block border-l border-divider self-center"
+                    >
+                      <span>Enable</span>
+                    </a>
+                    <a
+                      href="#"
+                      className="font-semibold pt-075 pb-075 pl-15 pr-15 block border-l border-divider self-center"
+                    >
+                      <span>Delete</span>
+                    </a>
+                  </div>
+                </td>
+              </tr>
+            )}
+            {productList && productList?.map((item, index) => {
+              return (
+                <tr key={index}>
+                  <td>
+                    <div className="form-field-container null">
+                      <div className="field-wrapper radio-field">
+                        <label>
+                          <input
+                            type="checkbox"
+                            value={item.select}
+                            checked={item.select === 1 ? true : false}
+                            onChange={(e) => {
+                              setChecked(0);
+                              setProductList(
+                                productList.map((items, index1) =>
+                                  index1 === index
+                                    ? {
+                                      ...items,
+                                      select:
+                                        e.target.checked === true ? 1 : 0,
+                                    }
+                                    : items
+                                )
+                              );
+                            }} />
+                          <span className="checkbox-checked">
+                            {item.select !== 0 && (
+                              <svg
+                                viewBox="0 0 20 20"
+                                focusable="false"
+                                aria-hidden="true"
+                              >
+                                <path d="m8.315 13.859-3.182-3.417a.506.506 0 0 1 0-.684l.643-.683a.437.437 0 0 1 .642 0l2.22 2.393 4.942-5.327a.436.436 0 0 1 .643 0l.643.684a.504.504 0 0 1 0 .683l-5.91 6.35a.437.437 0 0 1-.642 0" />
+                              </svg>
+                            )}
+                          </span>
+                          <span className="pl-05" />
+                        </label>
+                      </div>
+                    </div>
+                  </td>
+                  <>
                     <td>
-                      <div className="form-field-container null">
-                        <div className="field-wrapper radio-field">
-                          <label>
-                            <input type="checkbox" defaultValue={0} />
-                            <span className="checkbox-unchecked" />
-                            <span className="pl-05" />
-                          </label>
-                        </div>
+                      <div
+                        className="grid-thumbnail text-border border border-divider p-075 rounded flex justify-center"
+                        style={{ width: "6rem", height: "6rem" }}
+                      >
+                        <img
+                          className="self-center"
+                          src={item?.images}
+                        />
                       </div>
                     </td>
-                    <>
-                      <td>
-                        <div
-                          className="grid-thumbnail text-border border border-divider p-075 rounded flex justify-center"
-                          style={{ width: "6rem", height: "6rem" }}
+                    <td>
+                      <div>
+                        <a
+                          className="hover:underline font-semibold"
+                          href="/admin/products/edit/ccdb1b30-13f1-4d0f-a8a9-51ccf9e4ebd9"
                         >
-                          <img
-                            className="self-center"
-                            src={productdata.image}
-                            alt={productdata.productname}
-                          />
-                        </div>
-                      </td>
-                      <td>
-                        <div>
-                          <a
-                            className="hover:underline font-semibold"
-                            href="/admin/products/edit/ccdb1b30-13f1-4d0f-a8a9-51ccf9e4ebd9"
-                          >
-                            {productdata.productname}
-                          </a>
-                        </div>
-                      </td>
-                      <td>
-                        <div>
-                          <span>{productdata.price}</span>
-                        </div>
-                      </td>
-                      <td>{productdata.SKU}</td>
-                      <td>
-                        <div>
-                          <span>{productdata.Qty}</span>
-                        </div>
-                      </td>
-                      <td>
-                        <div className="flex justify-center">
-                          <span
-                            className={`${
-                              productdata.Status === "success"
-                                ? "success"
-                                : "default"
+                          {item?.name}
+                        </a>
+                      </div>
+                    </td>
+                    <td>
+                      <div>
+                        <span>{item?.price}</span>
+                      </div>
+                    </td>
+                    <td>{item?.sku}</td>
+                    <td>
+                      <div>
+                        <span>{item?.quantity}</span>
+                      </div>
+                    </td>
+                    <td>
+                      <div className="flex justify-center">
+                        <span
+                          className={`${item.status === 1
+                            ? "success"
+                            : "default"
                             }  dot`}
-                            style={{ width: "1.2rem", height: "1.2rem" }}
-                          />
-                        </div>
-                      </td>
-                    </>
-                  </tr>
-                );
-              })}
+                          style={{ width: "1.2rem", height: "1.2rem" }}
+                        />
+                      </div>
+                    </td>
+                  </>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
         <div className="pagination flex px-2">
@@ -271,7 +443,15 @@ const Product = () => {
                 <div className="" style={{ width: "5rem" }}>
                   <div className="form-field-container null">
                     <div className="field-wrapper flex flex-grow">
-                      <input type="text" defaultValue="" />
+                      <input
+                        type="text"
+                        onChange={(e) => {
+                          setSearchFilters((option) => ({
+                            ...option,
+                            count: e.target.value,
+                          }));
+                        }}
+                        value={searchFilters.count} />
                       <div className="field-border" />
                     </div>
                   </div>
@@ -288,13 +468,22 @@ const Product = () => {
               <div className="current" style={{ width: "5rem" }}>
                 <div className="form-field-container null">
                   <div className="field-wrapper flex flex-grow">
-                    <input type="text" defaultValue="" />
+                    <input
+                      type="text"
+                      value={searchFilters.page}
+                      onChange={(e) => {
+                        setSearchFilters((option) => ({
+                          ...option,
+                          page: e.target.value,
+                        }));
+                      }}
+                    />
                     <div className="field-border" />
                   </div>
                 </div>
               </div>
               <div className="last self-center">
-                <a href="#">10</a>
+                <a href="#">{searchFilters.totalPages}</a>
               </div>
               <div className="next self-center">
                 <a href="#">
@@ -315,7 +504,7 @@ const Product = () => {
                 </a>
               </div>
               <div className="self-center">
-                <span>186{/* */} records</span>
+                <span>{searchFilters.totalCount}{/* */} records</span>
               </div>
             </div>
           </div>

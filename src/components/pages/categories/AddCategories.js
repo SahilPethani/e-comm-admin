@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { connect } from "react-redux";
 import { createRecord } from "../../apis/services/CommonApiService";
 import { ApiEndPoints } from "../../apis/ApiEndPoints";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Routing } from "../../shared/constants/routing";
 
 const AddCategories = (props) => {
@@ -33,26 +33,12 @@ const AddCategories = (props) => {
   })
 
   const handleCategoryDetail = (e) => {
-    const { name } = e.target
-    const { value } = e.target
-    setCategoriDetail({ ...categoriDetail, [name]: value });
+    setCategoriDetail({ ...categoriDetail, [e.target.name]: e.target.value });
   }
 
   const handleSubmit = async () => {
     setLoading(true);
     const user_id = authUserDetails?.userId;
-    // var bodyFormData = new FormData();
-    // bodyFormData.append("name", categoriDetail.name);
-    // bodyFormData.append("description", categoriDetail.Description);
-    // bodyFormData.append("category_banner", categoriDetail?.image);
-    // bodyFormData.append("user", user_id);
-    // bodyFormData.append("status", categoriDetail.status);
-    // bodyFormData.append("include_in_store_menu", categoriDetail.include_in_store_menu);
-    // bodyFormData.append("url_key", categoriDetail.url_key);
-    // bodyFormData.append("meta_title", categoriDetail.meta_title);
-    // bodyFormData.append("meta_keywords", categoriDetail.meta_keywords);
-    // bodyFormData.append("meta_description", categoriDetail.meta_description);
-
     let data = {
       name: categoriDetail.name,
       description: categoriDetail.Description,
@@ -82,8 +68,8 @@ const AddCategories = (props) => {
       <div className="max-w-100 main-content-inner" style={{ paddingTop: 0 }}>
         <div className="page-heading flex justify-between items-center">
           <div className="flex justify-start space-x-1 items-center">
-            <a
-              href="/admin/categories"
+            <Link
+              to="/categories"
               className="breadcrum-icon border block border-border rounded mr-075"
             >
               <span className="flex items-center justify-center">
@@ -96,7 +82,7 @@ const AddCategories = (props) => {
                   <path d="M17 9H5.414l3.293-3.293a.999.999 0 1 0-1.414-1.414l-5 5a.999.999 0 0 0 0 1.414l5 5a.997.997 0 0 0 1.414 0 .999.999 0 0 0 0-1.414L5.414 11H17a1 1 0 1 0 0-2z" />
                 </svg>
               </span>
-            </a>
+            </Link>
             <div className="self-center">
               <h1 className="page-heading-title">Create A New category</h1>
             </div>

@@ -225,7 +225,7 @@ const Store_setting = (props) => {
                         <div className="field-border" />
                       </div>
                     </div>
-                    <div className="grid grid-cols-3 gap-2 mt-2">
+                    <div className="form-field-container null grid grid-cols-3 gap-2 mt-2">
                       <div>
                         <div className="form-field-container null">
                           <label htmlFor="storeCity">City</label>
