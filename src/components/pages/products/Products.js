@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { fetchList } from "../../apis/services/CommonApiService";
 import { ApiEndPoints } from "../../apis/ApiEndPoints";
+import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 
 const Product = () => {
 
@@ -92,9 +94,9 @@ const Product = () => {
           </div>
         </div>
         <div className="flex justify-end space-x-1 items-center">
-          <a href="/admin/products/new" className="button primary">
+          <Link to="/products/new" className="button primary">
             <span>New Product</span>
-          </a>
+          </Link>
         </div>
       </div>
       <div className="card shadow">

@@ -33,7 +33,7 @@ const AddCategories = (props) => {
   });
 
   const handleCategoryDetail = (e) => {
-    setCategoriDetail({ ...categoriDetail, [e.target.name]: e.target.value });
+      setCategoriDetail({ ...categoriDetail, [e.target.name]: e.target.value });
   }
 
   const handleSubmit = async () => {
@@ -154,7 +154,6 @@ const AddCategories = (props) => {
                             </svg>
                           </a>
                         </div>
-
                         <Editor
                           name="Description"
                           onChange={(data) => {

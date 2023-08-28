@@ -10,5 +10,6 @@ export const ApiEndPoints = {
   ADD_CATEGORIS:"seller/category/new",
   GET_CATEGORIS:"category",
 
-  GET_PRODUCT_SELLER:"seller/product"
+  GET_PRODUCT_SELLER:"seller/product",
+  ADD_PRODUCT_SELLER:"seller/product/new"
 };

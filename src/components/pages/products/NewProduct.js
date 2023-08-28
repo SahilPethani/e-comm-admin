@@ -1,21 +1,30 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import Editor from "../../common/Editor";
+import { Link, useNavigate } from "react-router-dom";
+import { createRecord } from "../../apis/services/CommonApiService";
+import { ApiEndPoints } from "../../apis/ApiEndPoints";
+import { toast } from "react-toastify";
+import { Routing } from "../../shared/constants/routing";
 
-const New_product = (props) => {
+const NewProduct = (props) => {
   const { authUserDetails } = props;
+  const navigate = useNavigate();
+
   const [editorLoaded, setEditorLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     setEditorLoaded(true);
   }, []);
-  const [categoriDetail, setCategoriDetail] = useState({
+
+  const [productDetail, setProductDetail] = useState({
     name: "",
-    SKU: "",
+    sku: "",
     price: "",
     weight: "",
     tax_class: "",
-    Product_Description: "",
+    description: "",
+    short_description: "",
     image: [],
     image_url: [],
     url_key: "",
@@ -23,12 +32,15 @@ const New_product = (props) => {
     meta_keywords: "",
     meta_description: "",
     status: 0,
+    visibility: 0,
+    manage_stock: 0,
+    stock_availability: 0,
+    quantity: "",
   });
-  console.log("🚀 ~ file: New_product.js:19 ~ categoriDetail:", categoriDetail);
+  console.log("🚀 ~ file: NewProduct.js:33 ~ NewProduct ~ productDetail:", productDetail)
+
   const handleProduct = (e) => {
-    const { name } = e.target;
-    const { value } = e.target;
-    setCategoriDetail({ ...categoriDetail, [name]: value });
+    setProductDetail({ ...productDetail, [e.target.name]: e.target.value });
   };
 
   const uploder = (e) => {
@@ -38,36 +50,49 @@ const New_product = (props) => {
       image_url: URL.createObjectURL(file),
     }));
 
-    setCategoriDetail((prevOption) => ({
+    setProductDetail((prevOption) => ({
       ...prevOption,
       image: [...prevOption.image, ...newImages],
     }));
   };
 
   const handleSubmit = async () => {
-    setLoading(true);
-    const user_id = authUserDetails?.userId;
+    // setLoading(true);
     let data = {
-      name: categoriDetail.name,
-      description: categoriDetail.Description,
-      user: user_id,
-      // category_banner: categoriDetail?.image,
-      status: categoriDetail.status,
-      include_in_store_menu: categoriDetail.include_in_store_menu,
-      // parent_category: categoriDetail.parent_category,
-      url_key: categoriDetail.url_key,
-      meta_title: categoriDetail.meta_title,
-      meta_keywords: categoriDetail.meta_keywords,
-      meta_description: categoriDetail.meta_description,
+      name: productDetail.name,
+      description: productDetail.description,
+      images: productDetail.image.map((item)=> item.image_url),
+      short_description: productDetail.short_description,
+      price: productDetail.price,
+      category: "64d38271b0e18f77d91181a9",
+      stock: productDetail.quantity,
+      status: productDetail.status,
+      sku: productDetail.sku,
+      weight: productDetail.weight,
+      visibility: productDetail.visibility,
+      stock_availability: productDetail.stock_availability,
+      manage_stock: productDetail.manage_stock,
+      quantity: productDetail.quantity,
+      discount: 0
     };
+    const result = await createRecord(data, ApiEndPoints.ADD_PRODUCT_SELLER);
+    if (result?.status === 201) {
+      setLoading(false);
+      // navigate(Routing.Categories);
+      toast.success(result?.message);
+    } else {
+      setLoading(false);
+      toast.error(result?.message);
+    }
+    console.log("🚀 ~ file: NewProduct.js:70 ~ handleSubmit ~ data:", data)
   };
   return (
     <div className="main-content-inner">
       <div className="max-w-100 mx-auto mt-3 mb-3">
         <div className="page-heading flex justify-between items-center">
           <div className="flex justify-start space-x-1 items-center">
-            <a
-              href="/admin/products"
+            <Link
+              to="/products"
               className="breadcrum-icon border block border-border rounded mr-075"
             >
               <span className="flex items-center justify-center">
@@ -80,7 +105,7 @@ const New_product = (props) => {
                   <path d="M17 9H5.414l3.293-3.293a.999.999 0 1 0-1.414-1.414l-5 5a.999.999 0 0 0 0 1.414l5 5a.997.997 0 0 0 1.414 0 .999.999 0 0 0 0-1.414L5.414 11H17a1 1 0 1 0 0-2z" />
                 </svg>
               </span>
-            </a>
+            </Link>
             <div className="self-center">
               <h1 className="page-heading-title">Create A New Product</h1>
             </div>
@@ -116,7 +141,7 @@ const New_product = (props) => {
                             <div className="field-wrapper flex flex-grow">
                               <input
                                 type="text"
-                                name="SKU"
+                                name="sku"
                                 placeholder="SKU"
                                 onChange={handleProduct}
                               />
@@ -129,7 +154,7 @@ const New_product = (props) => {
                             <label htmlFor="price">Price</label>
                             <div className="field-wrapper flex flex-grow">
                               <input
-                                type="text"
+                                type="number"
                                 name="price"
                                 placeholder="Price"
                                 defaultValue=""
@@ -214,11 +239,11 @@ const New_product = (props) => {
                           </a>
                         </div>
                         <Editor
-                          name="Product_Description"
+                          name="description"
                           onChange={(data) => {
-                            setCategoriDetail((option) => ({
+                            setProductDetail((option) => ({
                               ...option,
-                              Product_Description: data,
+                              description: data,
                             }));
                           }}
                           editorLoaded={editorLoaded}
@@ -236,7 +261,7 @@ const New_product = (props) => {
                   <div className="card-session-content pt-lg">
                     <div className="product-image-manager">
                       <div id="images" className="image-list" tabIndex={0}>
-                        {categoriDetail.image.map((imgObj, index) => (
+                        {productDetail.image.map((imgObj, index) => (
                           <img
                             key={index}
                             src={imgObj.image_url}
@@ -357,6 +382,14 @@ const New_product = (props) => {
                                   type="radio"
                                   name="status"
                                   id="status0"
+                                  value={0}
+                                  checked={productDetail.status === 0}
+                                  onChange={(e) =>
+                                    setProductDetail((option) => ({
+                                      ...option,
+                                      status: 0,
+                                    }))
+                                  }
                                 />
                                 <span className="radio-checked">
                                   <span />
@@ -370,6 +403,14 @@ const New_product = (props) => {
                                   type="radio"
                                   name="status"
                                   id="status1"
+                                  value={1}
+                                  checked={productDetail.status === 1}
+                                  onChange={(e) =>
+                                    setProductDetail((option) => ({
+                                      ...option,
+                                      status: 1,
+                                    }))
+                                  }
                                 />
                                 <span className="radio-checked">
                                   <span />
@@ -394,6 +435,14 @@ const New_product = (props) => {
                               type="radio"
                               name="Visibility"
                               id="Visibility0"
+                              value={0}
+                              checked={productDetail.visibility === 0}
+                              onChange={(e) =>
+                                setProductDetail((option) => ({
+                                  ...option,
+                                  visibility: 0,
+                                }))
+                              }
                             />
                             <span className="radio-checked">
                               <span />
@@ -407,6 +456,14 @@ const New_product = (props) => {
                               type="radio"
                               name="Visibility"
                               id="Visibility1"
+                              value={1}
+                              checked={productDetail.visibility === 1}
+                              onChange={(e) =>
+                                setProductDetail((option) => ({
+                                  ...option,
+                                  visibility: 1,
+                                }))
+                              }
                             />
                             <span className="radio-checked">
                               <span />
@@ -430,7 +487,19 @@ const New_product = (props) => {
                       <div className="field-wrapper radio-field">
                         <div>
                           <label htmlFor="stock0" className="flex">
-                            <input type="radio" name="stock" id="stock0" />
+                            <input
+                              type="radio"
+                              name="stock"
+                              id="stock0"
+                              value={0}
+                              checked={productDetail.manage_stock === 0}
+                              onChange={(e) =>
+                                setProductDetail((option) => ({
+                                  ...option,
+                                  manage_stock: 0,
+                                }))
+                              }
+                            />
                             <span className="radio-checked">
                               <span />
                             </span>
@@ -439,7 +508,19 @@ const New_product = (props) => {
                         </div>
                         <div>
                           <label htmlFor="stock1" className="flex">
-                            <input type="radio" name="stock" id="stock1" />
+                            <input
+                              type="radio"
+                              name="stock"
+                              id="stock1"
+                              value={1}
+                              checked={productDetail.manage_stock === 1}
+                              onChange={(e) =>
+                                setProductDetail((option) => ({
+                                  ...option,
+                                  manage_stock: 1,
+                                }))
+                              }
+                            />
                             <span className="radio-checked">
                               <span />
                             </span>
@@ -463,6 +544,14 @@ const New_product = (props) => {
                               type="radio"
                               name="stock_availability"
                               id="stock_availability0"
+                              value={1}
+                              checked={productDetail.stock_availability === 0}
+                              onChange={(e) =>
+                                setProductDetail((option) => ({
+                                  ...option,
+                                  stock_availability: 0,
+                                }))
+                              }
                             />
                             <span className="radio-checked">
                               <span />
@@ -476,6 +565,14 @@ const New_product = (props) => {
                               type="radio"
                               name="stock_availability"
                               id="stock_availability1"
+                              value={1}
+                              checked={productDetail.stock_availability === 1}
+                              onChange={(e) =>
+                                setProductDetail((option) => ({
+                                  ...option,
+                                  stock_availability: 1,
+                                }))
+                              }
                             />
                             <span className="radio-checked">
                               <span />
@@ -497,6 +594,10 @@ const New_product = (props) => {
                           name="qty"
                           placeholder="Quantity"
                           defaultValue=""
+                          onChange={(e) => setProductDetail((option) => ({
+                            ...option,
+                            quantity: e.target.value,
+                          }))}
                         />
                         <div className="field-border" />
                       </div>
@@ -777,4 +878,4 @@ const mapStateToProps = (state) => {
     authUserDetails: state.auth.userInfo,
   };
 };
-export default connect(mapStateToProps)(New_product);
+export default connect(mapStateToProps)(NewProduct);
